@@ -127,12 +127,12 @@ public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployP
 
     @Override
     public IPage<DeployViewVO> getDeployViewList(DeployPostQueryDTO dto) {
-        Page page = new Page(dto.getPageNum(), dto.getPageSize());
-        page.setAsc("state"); // 按未处理进行排序
-        page.setDesc("post_level", "gmt_create");
-        page.setSearchCount(false);
-        page.setTotal(baseMapper.selectCountPageByQueryDTO(dto));
-        return baseMapper.selectPageByQueryDTO(page, dto);
+        List<DeployViewVO> records  =  baseMapper.selectPageByQueryDTO(dto);
+        IPage iPage = new Page(dto.getPageNum(),dto.getPageSize());
+        iPage.setTotal(baseMapper.selectCountPageByQueryDTO(dto));
+        iPage.setRecords(records);
+        iPage.setPages(iPage.getPages());
+        return iPage;
     }
 
     @Override

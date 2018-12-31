@@ -8,6 +8,8 @@ import com.cdxt.backend.deploy.pojo.dto.DeployPostQueryDTO;
 import com.cdxt.backend.deploy.pojo.vo.DeployViewVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -17,7 +19,7 @@ import org.apache.ibatis.annotations.Param;
  * @since 2020-05-27
  */
 public interface DeployPostMapper extends BaseMapper<DeployPost> {
-    IPage<DeployViewVO> selectPageByQueryDTO(Page page,@Param("dto") DeployPostQueryDTO dto);
+    List<DeployViewVO> selectPageByQueryDTO(@Param("dto") DeployPostQueryDTO dto);
 
 
     long selectCountPageByQueryDTO(@Param("dto") DeployPostQueryDTO dto);

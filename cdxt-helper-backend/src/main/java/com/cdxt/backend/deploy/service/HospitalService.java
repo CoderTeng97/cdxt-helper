@@ -24,9 +24,9 @@ public interface HospitalService extends IService<Hospital> {
    IPage<Hospital> getHospitalList(String text,Integer pageNum ,Integer pageSize);
 
    /**
-    * 更新医院信息
+    * 更新或保存医院信息
     * @param dto
     * @return
     */
-   Boolean updateHospital(HospitalUpdateDTO dto);
+   Boolean saveOrUpdateHospital(HospitalUpdateDTO dto);
 }

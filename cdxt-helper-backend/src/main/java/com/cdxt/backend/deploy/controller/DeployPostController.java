@@ -84,12 +84,12 @@ public class DeployPostController extends BaseController {
     }
 
 
-    @ApiOperation("更新医院信息")
-    @PostMapping("/updateHospital")
+    @ApiOperation("更新或插入医院信息")
+    @PostMapping("/savaOrUpdateHospital")
     public Boolean hospitals(
            @RequestBody HospitalUpdateDTO dto
     ){
-        return hospitalService.updateHospital(dto);
+        return hospitalService.saveOrUpdateHospital(dto);
     }
 
     @ControllerResponseIgnore

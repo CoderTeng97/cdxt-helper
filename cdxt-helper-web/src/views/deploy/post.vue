@@ -12,7 +12,7 @@
         <el-col :span="24">
           <el-form-item label="医院" prop="hospital">
             <el-select
-              v-model="tempForm.hospital"
+              v-model="tempForm.hospital.id"
               filterable
               remote
               reserve-keyword
@@ -25,7 +25,7 @@
                 v-for="item in hospitals"
                 :key="item.name"
                 :label="item.name"
-                :value="item"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -163,6 +163,9 @@ export default {
      * 医院选项值改变时间
      */
     hospitalSelectChangeEvt() {
+      this.tempForm.hospital = this.hospitals.filter(item=>item.id==this.tempForm.hospital.id)[0];
+      console.log("医院触发")
+      console.log(this.tempForm.hospital.id)
       //根据医院获取处理用户
       this.tempForm.dUser = {
         id: "1265647429739417605",

@@ -8,7 +8,12 @@ import com.cdxt.backend.deploy.dao.HospitalMapper;
 import com.cdxt.backend.deploy.pojo.dto.HospitalUpdateDTO;
 import com.cdxt.backend.deploy.service.HospitalService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cdxt.common.utils.IdWorker;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.UUID;
 
 /**
  * <p>
@@ -20,6 +25,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class HospitalServiceImpl extends ServiceImpl<HospitalMapper, Hospital> implements HospitalService {
+    @Autowired
+    IdWorker idWorker;
 
     @Override
     public IPage<Hospital> getHospitalList(String text, Integer pageNum, Integer pageSize) {
@@ -31,11 +38,15 @@ public class HospitalServiceImpl extends ServiceImpl<HospitalMapper, Hospital> i
     }
 
     @Override
-    public Boolean updateHospital(HospitalUpdateDTO dto) {
+    public Boolean saveOrUpdateHospital(HospitalUpdateDTO dto) {
         Hospital hospital = new Hospital();
-        hospital.setId(dto.getId());
+        if (StringUtils.isEmpty(dto.getId())){
+            hospital.setId(idWorker.nextId()+"");
+        }else{
+            hospital.setId(dto.getId());
+        }
         hospital.setBranch(dto.getBranch());
         hospital.setName(dto.getName());
-        return updateById(hospital);
+        return this.saveOrUpdate(hospital);
     }
 }

@@ -45,7 +45,7 @@
               </el-input>
             </template>
             <template slot-scope="scope">
-              <el-button size="mini" type="danger" >编辑(暂未开发)</el-button>
+              <el-button size="mini" type="danger" >放置医院对象VPN、DB、分支信息并管理（未开发）</el-button>
                <!--<el-button
                 size="mini"
                 type="danger"
