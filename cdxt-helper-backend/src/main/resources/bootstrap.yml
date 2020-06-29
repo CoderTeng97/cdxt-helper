@@ -7,4 +7,4 @@ spring:
       name: cdxt
       profile: dev
       laber: master
-      uri: http://http://39.106.183.121/:9025/
+      uri: http://39.106.183.121:9025/
