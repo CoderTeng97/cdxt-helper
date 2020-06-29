@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdxt.backend.deploy.dao.DeployPostMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cdxt.backend.deploy.model.DeployPost">
+        <result column="id" property="id"/>
+        <result column="hospital_id" property="hospitalId"/>
+        <result column="branch" property="branch"/>
+        <result column="remark" property="remark"/>
+        <result column="post_level" property="postLevel"></result>
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="state" property="state"/>
+        <result column="d_uid" property="dUid"></result>
+        <result column="p_uid" property="pUid"></result>
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, hospital_id, hospital_name, remark, modification_src, gmt_create, gmt_modified, state, uid
+    </sql>
+
+    <sql id="View_List_Cols">
+      dp.*,pu.true_name as p_username,du.true_name as d_username ,h.name as hospital_name,tdps.id as tdps_id ,tdps.src
+    </sql>
+    <resultMap id="ListViewMap" type="com.cdxt.backend.deploy.pojo.vo.DeployViewVO" extends="BaseResultMap">
+        <result column="d_username" property="dUsername"></result>
+        <result column="p_username" property="pUsername"></result>
+        <result column="hospital_name" property="hospitalName"></result>
+        <result column="post_level" property="postLevel"></result>
+        <collection property="fileSrcList" ofType="com.cdxt.backend.deploy.pojo.vo.DeploySrcViewVO">
+            <id column="tdps_id" property="id"></id>
+            <result column="src" property="src"></result>
+        </collection>
+    </resultMap>
+    <select id="selectPageByQueryDTO" resultMap="ListViewMap">
+        select
+        <include refid="View_List_Cols"></include>
+        from tb_deploy_post dp
+        left join tb_user du on du.id = dp.d_uid
+        left join tb_user pu on pu.id = dp.p_uid
+        left join tb_hospital h on dp.hospital_id = h.id
+        left join tb_deploy_post_src tdps on tdps.pid = dp.id
+        <where>
+            1 = 1
+            <if test="dto.hospitalId != null and dto.hospitalId != '' ">
+                and dp.hospital_id = #{dto.hospitalId}
+            </if>
+            <if test="dto.state != null and dto.state != '' ">
+                and dp.state = #{dto.state}
+            </if>
+            <if test="dto.postStartTime != null">
+                and dp.gmt_create between  #{dto.postStartTime} and #{dto.postEndTime}
+            </if>
+            <if test="dto.uid != null and dto.uid != '' ">
+                and (dp.d_uid = #{dto.uid} or dp.p_uid = #{dto.uid})
+            </if>
+
+        </where>
+    </select>
+
+</mapper>

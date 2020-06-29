@@ -1,0 +1,10 @@
+server:
+  port: 9026
+
+spring:
+  cloud:
+    config:
+      name: cdxt
+      profile: dev
+      laber: master
+      uri: http://http://39.106.183.121/:9025/
