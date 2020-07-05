@@ -94,7 +94,7 @@ public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployP
                 //svnUtil.downloadFile("svn://" + svnClientIp + srcTempPrifix, "/" + tempSrc, svnTempDir + '/' + entity.getId());
                 DeployPostSrc src = new DeployPostSrc();
                 src.setPid(entity.getId());
-                src.setSrc("/" + tempSrc);
+                src.setSrc("\\" + tempSrc);
                 srcList.add(src);
             }
             //生成压缩包到文件服务器
@@ -102,8 +102,8 @@ public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployP
 //            ZipUtil.pack(svnTempFile, new File(svnTempDir + "/" + entity.getId() + ".zip"));
 //            svnTempFile.deleteOnExit();
             //FIXME 此处会出现事务不一致性，需测试并做事务处理
-            int insertCount = baseMapper.insert(entity);
             boolean insertFlag = deployPostSrcService.saveBatch(srcList);
+            int insertCount = baseMapper.insert(entity);
             if (insertFlag == true && insertCount == 1) {
                 isPost = true;
                 sendNoticMail(entity);
@@ -130,6 +130,8 @@ public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployP
         Page page = new Page(dto.getPageNum(), dto.getPageSize());
         page.setAsc("state"); // 按未处理进行排序
         page.setDesc("post_level", "gmt_create");
+        page.setSearchCount(false);
+        page.setTotal(baseMapper.selectCountPageByQueryDTO(dto));
         return baseMapper.selectPageByQueryDTO(page, dto);
     }
 

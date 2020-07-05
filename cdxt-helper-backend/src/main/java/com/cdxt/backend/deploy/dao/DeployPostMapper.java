@@ -17,5 +17,8 @@ import org.apache.ibatis.annotations.Param;
  * @since 2020-05-27
  */
 public interface DeployPostMapper extends BaseMapper<DeployPost> {
-    IPage<DeployViewVO> selectPageByQueryDTO(Page page ,@Param("dto") DeployPostQueryDTO dto);
+    IPage<DeployViewVO> selectPageByQueryDTO(Page page,@Param("dto") DeployPostQueryDTO dto);
+
+
+    long selectCountPageByQueryDTO(@Param("dto") DeployPostQueryDTO dto);
 }

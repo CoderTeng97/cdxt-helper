@@ -24,6 +24,9 @@
     <sql id="View_List_Cols">
       dp.*,pu.true_name as p_username,du.true_name as d_username ,h.name as hospital_name,tdps.id as tdps_id ,tdps.src
     </sql>
+    <sql id="View_List_ConditionSQL">
+
+    </sql>
     <resultMap id="ListViewMap" type="com.cdxt.backend.deploy.pojo.vo.DeployViewVO" extends="BaseResultMap">
         <result column="d_username" property="dUsername"></result>
         <result column="p_username" property="pUsername"></result>
@@ -56,7 +59,24 @@
             <if test="dto.uid != null and dto.uid != '' ">
                 and (dp.d_uid = #{dto.uid} or dp.p_uid = #{dto.uid})
             </if>
-
+        </where>
+    </select>
+    <select id="selectCountPageByQueryDTO" resultType="long">
+        select count(1) from tb_deploy_post dp
+        <where>
+            1 = 1
+            <if test="dto.hospitalId != null and dto.hospitalId != '' ">
+                and dp.hospital_id = #{dto.hospitalId}
+            </if>
+            <if test="dto.state != null and dto.state != '' ">
+                and dp.state = #{dto.state}
+            </if>
+            <if test="dto.postStartTime != null">
+                and dp.gmt_create between  #{dto.postStartTime} and #{dto.postEndTime}
+            </if>
+            <if test="dto.uid != null and dto.uid != '' ">
+                and (dp.d_uid = #{dto.uid} or dp.p_uid = #{dto.uid})
+            </if>
         </where>
     </select>
 

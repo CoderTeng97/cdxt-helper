@@ -101,13 +101,13 @@
         <template slot-scope="scope">
           <el-tag :type="scope.row.state == 0 ? 'primary' : 'success'">
             {{ scope.row.state ==0 ? '未处理':'已处理' }}
-            </el-tag>
+          </el-tag>
         </template>
       </el-table-column>
 
       <el-table-column label="操作" >
         <template slot-scope="scope">
-          <el-button v-if="scope.row.state == 0" type="" size="mini" @click="stateClickEvent(scope.$index, scope.row)">处理</el-button>
+          <el-button v-if="scope.row.state == 0 && uid ==scope.row.duid " type="" size="mini" @click="stateClickEvent(scope.$index, scope.row)">处理</el-button>
           <!-- <el-button v-if="scope.row.state == 0" type="" size="mini" @click="downloadPatches(scope.row)">下载补丁</el-button> -->
         </template>
       </el-table-column>
@@ -117,11 +117,11 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page.sync="currentPage2"
+          :current-page.sync="rparams.pageNum"
           :page-sizes="[10, 20, 50, 100]"
           :page-size="rparams.pageSize"
           layout="total,sizes, prev, pager, next"
-          :total="resData.pages"
+          :total="resData.total"
         ></el-pagination>
       </el-col>
     </el-row>
@@ -138,6 +138,7 @@ export default {
     return {
       resData: {},
       listLoading: true,
+      uid:'',
       rparams: {
         hospitalId: "",
         pageNum: 1,
@@ -212,6 +213,8 @@ export default {
   //   }
   // },
   created() {
+    //获取用户id
+    this.uid = this.$store.state.user.uid
     this.fetchData();
   },
   methods: {
@@ -244,6 +247,8 @@ export default {
       this.rparams.hospitalId = this.hospital.id;
       let res = await deployList(this.rparams);
       this.resData = res;
+      console.log(this.resData)
+      console.log(this.rparams)
     },
     /**
      * 更新记录状态

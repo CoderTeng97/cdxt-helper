@@ -5,8 +5,9 @@ import { resetRouter } from '@/router'
 const getDefaultState = () => {
   return {
     token: getToken(),
+    uid:'',
     name: '',
-    avatar: ''
+    role:''
   }
 }
 
@@ -36,7 +37,9 @@ const actions = {
         console.log(response)
         //const { data } = response.data
         commit('SET_TOKEN', response.token)
-        console.log(response.token)
+        state.uid = response.id
+        state.name = response.username
+        state.role = response.role
         setToken(response.token)
         resolve()
       }).catch(error => {

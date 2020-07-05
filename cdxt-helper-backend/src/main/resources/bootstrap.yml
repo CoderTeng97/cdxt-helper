@@ -5,6 +5,6 @@ spring:
   cloud:
     config:
       name: cdxt
-      profile: dev
+      profile: formal
       laber: master
       uri: http://39.106.183.121:9025/
