@@ -2,7 +2,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
-
+import router from '@/router'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
@@ -43,13 +43,20 @@ service.interceptors.response.use(
    * Here is just an example
    * You can also judge the status by HTTP Status Code
    */
+  
   response => {
     const res = response.data
-
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
       if(res.code == 403){
-        this.$router.push({path:"/login?redirect=login"})
+        Message({
+          message: '亲，您离开的太久啦~ 请重新登录',
+          type: 'info',
+          duration: 5 * 1000
+        })
+        store.dispatch('user/logout')
+        router.push({path:'/login'})
+        return;
       }
       Message({
         message: res.msg || 'Error',

@@ -44,16 +44,16 @@ public class UserController {
 
     /**
      * 获取用户列表
-     * @param text
-     * @param role
+     * @param text 用户搜索文本
+     * @param role 角色
      * @return
      */
-    @GetMapping
+    @GetMapping("/list")
     public List<Map<String, Object>> getUserList(
             @RequestParam(required = false)
-            String text,
+                    String text,
             @RequestParam(required = false)
-            String role
+                    String role
     ){
         return  userService.getUserList(text,role);
     }

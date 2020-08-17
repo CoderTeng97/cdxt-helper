@@ -45,7 +45,6 @@ public class DeployPostController extends BaseController {
       return   deployPostService.increaseDeployPost(deployPostDTO);
     }
 
-
     @ApiOperation("获取部署列表")
     @PostMapping("/list")
     public  ResponseListVO  list(@RequestBody DeployPostQueryDTO deployPostQueryDTO){
@@ -109,7 +108,6 @@ public class DeployPostController extends BaseController {
             e.printStackTrace();
             log.error("补丁下载发生异常",e);
             throw  new ResponseCommonException(HttpStatus.INTERNAL_SERVER_ERROR,"补丁下载发生IO异常");
-
         }
     }
 

@@ -98,10 +98,8 @@ export default {
       })
     },
     handleLogin() {
-      console.log("-----开始登陆-----")
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          console.log("-----校验通过-----")
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             console.log("login success")
@@ -111,7 +109,6 @@ export default {
             this.loading = false
           })
         } else {
-          console.log('参数错误')
           return false
         }
       })

@@ -63,14 +63,15 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="24" v-if="tempForm.dUser.id !=''">
+        <el-col :span="24" v-if="showDUserSelect">
           <el-form-item label="处理人员" prop="dUid">
-            <el-select v-model="tempForm.dUser" placeholder="请选择活动区域">
+            <el-select v-model="form.dUid" placeholder="请选择处理人员">
               <el-option
-                :label="tempForm.dUser.trueName"
-                :key="tempForm.dUser.id"
-                :value="tempForm"
-              ></el-option>
+                v-for="item in deployerList"
+                :key="item.id"
+                :label="item.true_name"
+                :value="item.id">
+              </el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -94,6 +95,7 @@
 
 <script>
 import { deployPost, getHospital } from "../../api/deploy";
+import {getUserList} from "../../api/user"
 export default {
   data() {
     let validateHospital = (rule, value, callback) => {
@@ -120,24 +122,36 @@ export default {
         fileSrcList: [],
         fileSrc: "", //补丁路径 表达临时存储路径，为了方便值得转换
         hospital: {}, //医院
-        dUser: {
-          //处理用户
-          id: "",
-          trueName: ""
-        }
       },
       hospitals: [], // 医院列表
+      deployerList: [],//部署人员列表,
+      showDUserSelect: false,//显示处理人员下拉框
       rules: {
         hospital: [
           { validator: validateHospital, trigger: "change" }
+        ],
+        dUid: [
+          { required: true, message: '请选择处理人员', trigger: 'change' }
         ]
       } //校验规则
     };
   },
 
+  mounted () {
+    this.initPage();
+  },
   methods: {
+    /**
+     * 初始化页面
+     */
+    async initPage(){
+      //获取部署人员列表
+      this.deployerList = await getUserList('deployer','')
+      console.log(this.deployerList)
+    },
     //提交的时候
     onSubmit(formName) {
+      console.log(this.form)
       this.$refs[formName].validate(valid => {
         if (valid) {
           console.log(this.tempForm)
@@ -156,21 +170,16 @@ export default {
      * 重置表单
      */
     resetForm(formName) {
-      this.form = {};
-      this.tempForm = {};
+      this.$refs[formName].resetFields();
+      this.tempForm.fileSrcList=[];
+      this.form.fileSrcList=[];
     },
     /**
      * 医院选项值改变时间
      */
     hospitalSelectChangeEvt() {
       this.tempForm.hospital = this.hospitals.filter(item=>item.id==this.tempForm.hospital.id)[0];
-      console.log("医院触发")
-      console.log(this.tempForm.hospital.id)
-      //根据医院获取处理用户
-      this.tempForm.dUser = {
-        id: "1265647429739417605",
-        trueName: "唐文鑫"
-      };
+      this.showDUserSelect = true;
     },
 
     async post() {
@@ -185,8 +194,6 @@ export default {
       tempFileSrcList.push(this.tempForm.fileSrc);
       console.log(tempFileSrcList);
       this.form.fileSrcList = tempFileSrcList;
-      //设置处理人
-      this.form.dUid = this.tempForm.dUser.id;
       let res = await deployPost(this.form);
       if (res) {
         this.$message({

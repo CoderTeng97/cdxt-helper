@@ -22,3 +22,15 @@ export function logout() {
     method: 'post'
   })
 }
+
+
+export function getUserList(role,text) {
+  return request({
+    url: '/user/list',
+    method: 'get',
+    params:{
+      role,
+      text
+    }
+  })
+}
