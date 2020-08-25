@@ -1,0 +1,59 @@
+package com.cdxt.backend.controller;
+
+import com.cdxt.backend.pojo.dto.UserLoginDTO;
+import com.cdxt.backend.model.User;
+import com.cdxt.backend.service.UserService;
+import com.cdxt.common.annotation.ControllerResponseProcessor;
+import com.cdxt.common.pojo.vo.UserBaseVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@ControllerResponseProcessor
+@RequestMapping("/user")
+public class UserController {
+    @Autowired
+    UserService userService;
+
+
+    /**
+     * 用户登录
+     * @param dto
+     * @return
+     */
+    @PostMapping("/login")
+    public UserBaseVO login(@RequestBody UserLoginDTO dto) {
+        return  userService.login(dto);
+    }
+
+    /**
+     * 用户注册
+     * @param user
+     * @return
+     */
+    @PutMapping("/register")
+    public Boolean register(@RequestBody User user) {
+        return userService.increaseUser(user);
+    }
+
+
+    /**
+     * 获取用户列表
+     * @param text 用户搜索文本
+     * @param role 角色
+     * @return
+     */
+    @GetMapping("/list")
+    public List<Map<String, Object>> getUserList(
+            @RequestParam(required = false)
+                    String text,
+            @RequestParam(required = false)
+                    String role
+    ){
+        return  userService.getUserList(text,role);
+    }
+
+}

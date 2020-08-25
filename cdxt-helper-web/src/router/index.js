@@ -96,6 +96,20 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/aftersales',
+    component: Layout,
+    meta: { title: '运维管理', icon: 'table' },
+    children: [
+      {
+        path: '/problemPost',
+        name: 'Form',
+        component: () => import('../views/afterSafe/issueManager.vue'),
+        meta: { title: '售后问题管理', icon: 'table' },
+      }
+    ]
+  },
+
   
 
   // 404 page must be placed at the end !!!

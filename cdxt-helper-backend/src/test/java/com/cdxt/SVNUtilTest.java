@@ -1,6 +1,6 @@
 package com.cdxt;
 
-import com.cdxt.backend.deploy.CdxtHelperApplication;
+import com.cdxt.backend.CdxtHelperApplication;
 import com.cdxt.common.utils.SVNUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

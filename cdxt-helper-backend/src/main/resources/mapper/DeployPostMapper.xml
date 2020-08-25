@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdxt.backend.deploy.dao.DeployPostMapper">
+<mapper namespace="com.cdxt.backend.dao.DeployPostMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.cdxt.backend.deploy.model.DeployPost">
+    <resultMap id="BaseResultMap" type="com.cdxt.backend.model.DeployPost">
         <result column="id" property="id"/>
         <result column="hospital_id" property="hospitalId"/>
         <result column="branch" property="branch"/>
@@ -27,12 +27,12 @@
     <sql id="View_List_ConditionSQL">
 
     </sql>
-    <resultMap id="ListViewMap" type="com.cdxt.backend.deploy.pojo.vo.DeployViewVO" extends="BaseResultMap">
+    <resultMap id="ListViewMap" type="com.cdxt.backend.pojo.vo.DeployViewVO" extends="BaseResultMap">
         <result column="d_username" property="dUsername"></result>
         <result column="p_username" property="pUsername"></result>
         <result column="hospital_name" property="hospitalName"></result>
         <result column="post_level" property="postLevel"></result>
-        <collection property="fileSrcList" ofType="com.cdxt.backend.deploy.pojo.vo.DeploySrcViewVO">
+        <collection property="fileSrcList" ofType="com.cdxt.backend.pojo.vo.DeploySrcViewVO">
             <id column="tdps_id" property="id"></id>
             <result column="src" property="src"></result>
         </collection>

@@ -24,7 +24,6 @@ import java.io.PrintWriter;
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 
-    JSONObject info = new JSONObject();
 
     @ExceptionHandler
     public void processExceptions(HttpServletRequest request, HttpServletResponse response, Exception e){

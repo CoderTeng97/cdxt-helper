@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdxt.backend.deploy.dao.HospitalMapper">
+<mapper namespace="com.cdxt.backend.dao.HospitalMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.cdxt.backend.deploy.model.Hospital">
+    <resultMap id="BaseResultMap" type="com.cdxt.backend.model.Hospital">
         <result column="id" property="id" />
         <result column="name" property="name" />
         <result column="branch" property="branch" />

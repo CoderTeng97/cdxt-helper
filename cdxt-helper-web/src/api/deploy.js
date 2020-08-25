@@ -52,11 +52,11 @@ export function getHospital(param) {
    *  更新医院
    * @param {*} data 
    */
-  export function updateHospital(data) {
+  export function saveAndUpdateHospital(data) {
     return request({
-      url: '/deploy/update/hospital',
+      url: '/deploy/savaOrUpdateHospital',
       method: 'post',
-      params:data
+      data:data
     })
   }
 

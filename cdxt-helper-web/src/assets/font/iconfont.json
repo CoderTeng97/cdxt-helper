@@ -1,0 +1,121 @@
+{
+  "id": "2017447",
+  "name": "cdxt",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "386098",
+      "name": "日志",
+      "font_class": "rizhi",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "3669795",
+      "name": "发布",
+      "font_class": "fabu",
+      "unicode": "e68a",
+      "unicode_decimal": 59018
+    },
+    {
+      "icon_id": "6494894",
+      "name": "详情",
+      "font_class": "xiangqing",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "6590250",
+      "name": "刷新 copy",
+      "font_class": "shuaxincopy",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "7414931",
+      "name": "发布",
+      "font_class": "fabu1",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    },
+    {
+      "icon_id": "8502837",
+      "name": "任务",
+      "font_class": "imagevector",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "9330222",
+      "name": "指派",
+      "font_class": "zhipai",
+      "unicode": "e8e4",
+      "unicode_decimal": 59620
+    },
+    {
+      "icon_id": "10786008",
+      "name": "校验",
+      "font_class": "xiaoyan",
+      "unicode": "e6e4",
+      "unicode_decimal": 59108
+    },
+    {
+      "icon_id": "13835050",
+      "name": "任务",
+      "font_class": "renwu",
+      "unicode": "eb13",
+      "unicode_decimal": 60179
+    },
+    {
+      "icon_id": "15640537",
+      "name": "值班人员",
+      "font_class": "zhibanrenyuan",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "16318066",
+      "name": "完成",
+      "font_class": "wancheng5",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "6854593",
+      "name": "新增",
+      "font_class": "xinzeng",
+      "unicode": "e75d",
+      "unicode_decimal": 59229
+    },
+    {
+      "icon_id": "11933526",
+      "name": "修改",
+      "font_class": "xiugai",
+      "unicode": "e6f1",
+      "unicode_decimal": 59121
+    },
+    {
+      "icon_id": "12637037",
+      "name": "数据库",
+      "font_class": "shujuku",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "16657050",
+      "name": "VPN",
+      "font_class": "aistubiaozhizuo--copy",
+      "unicode": "e7f2",
+      "unicode_decimal": 59378
+    },
+    {
+      "icon_id": "16657067",
+      "name": "现场人员维护",
+      "font_class": "xianchangrenyuanweihu-copy",
+      "unicode": "e7f3",
+      "unicode_decimal": 59379
+    }
+  ]
+}

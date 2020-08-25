@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdxt.backend.dao.IssuesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cdxt.backend.model.Issues">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="detail" property="detail" />
+        <result column="classification" property="classification" />
+        <result column="priority_code" property="priorityCode" />
+        <result column="d_uid" property="dUid" />
+        <result column="v_uid" property="vUid" />
+        <result column="p_uid" property="pUid" />
+        <result column="state" property="state" />
+        <result column="module" property="module" />
+        <result column="gmt_create" property="gmtCreate" />
+        <result column="gmt_modified" property="gmtModified" />
+        <result column="gmt_completion" property="gmtCompletion" />
+        <result column="is_del" property="isDel" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, detail, classification, priority_code, d_uid, v_uid, p_uid, state, module, gmt_create, gmt_modified, gmt_completion, is_del
+    </sql>
+
+</mapper>
