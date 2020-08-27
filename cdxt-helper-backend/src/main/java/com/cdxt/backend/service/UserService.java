@@ -49,5 +49,12 @@ public interface UserService extends IService<User> {
      */
     String getTrueName(String uid);
 
+    /**
+     * 判断用户是否存在
+     * @param uid
+     * @return
+     */
+    Boolean isExistUser(String uid);
+
 
 }

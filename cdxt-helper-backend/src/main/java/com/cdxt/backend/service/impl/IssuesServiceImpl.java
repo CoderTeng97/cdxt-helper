@@ -2,6 +2,7 @@ package com.cdxt.backend.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cdxt.backend.convert.IssueConvert;
+import com.cdxt.backend.enums.AfsWssMsgTypeEnum;
 import com.cdxt.backend.enums.TaskStateEnum;
 import com.cdxt.backend.model.Issues;
 import com.cdxt.backend.dao.IssuesMapper;
@@ -60,13 +61,18 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
         issues.setId(idWorker.nextId()+"");
         issues.setState(postDTO.getIsAdditional()? TaskStateEnum.RESOLVE.value() : TaskStateEnum.UNPROCESSED.value());
         Boolean isSave = this.save(issues);
-        StringBuilder issueLog = new StringBuilder();
         //查询关联信息并返回
         //IssuesViewVO issuesViewVO = baseMapper.selectViewColumnById(issues.getId());
-        String userName = Optional.ofNullable(userService.getTrueName(postDTO.getpUid())).orElseGet(() -> "未知用户");
-        issueLog.append(userName + "发布了问题任务:")
-                .append(postDTO.getTitle());
+        String userName = userService.getTrueName(postDTO.getpUid());
         if (isSave){
+            StringBuilder issueLog = new StringBuilder();
+            if (postDTO.getIsAdditional()){
+                issueLog.append(userName + "发布了问题任务:")
+                        .append(postDTO.getTitle());
+            }else{
+                issueLog.append(userName + "补录了问题任务:")
+                        .append(postDTO.getTitle());
+            }
             sendIssueOpLog(issues.getId(),issues.getPUid(),issueLog.toString());
         }
         return isSave;
@@ -78,21 +84,21 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
                 new ResponseCommonException(HttpStatus.BAD_REQUEST,"状态不能为空")
         );
         StringBuilder issueLog = new StringBuilder();
-        issueLog.append(opUid).append("用户");
-        if ("1".equals(dto.getState())){//完成
-            issueLog.append("完成了");
-        }else if ("2".equals(dto.getState())){//校验
-            issueLog.append("审核通过");
-        }else if ("3".equals(dto.getState())){//处理中 （退回）
-            issueLog.append("审核失败");
-        }else{
-            throw  new ResponseCommonException("状态匹配,请问题处理状态参数是否正确!");
-        }
-        issueLog.append("\"").append(dto.getTitle()).append("\"")
-                .append("问题");
+        String userName = userService.getTrueName(opUid);
         Issues issues = issueConvert.updateParams2Entity(dto);
         Boolean isUpdate = this.updateById(issues);
         if(isUpdate){
+            issueLog.append(userName).append("用户");
+            if ("1".equals(dto.getState())){//完成
+                issueLog.append("完成了");
+            }else if ("2".equals(dto.getState())){//校验
+                issueLog.append("审核通过");
+            }else if ("3".equals(dto.getState())){//处理中 （退回）
+                issueLog.append("审核失败");
+            }else{
+                throw  new ResponseCommonException("非法操作");
+            }
+            issueLog.append("了问题:").append(dto.getTitle());
             sendIssueOpLog(issues.getId(),issues.getPUid(),issueLog.toString());
         }
 
@@ -102,7 +108,7 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
     public ResponseListVO<IssuesViewVO> searchIssueList(IssuesQueryDTO dto) {
         List<IssuesViewVO> records =  baseMapper.selectPageByQueryDTO(dto);
         Long totalCount = baseMapper.selectPageByQueryDTOCount(dto);
-        return  new ResponseListVO<IssuesViewVO>(dto.getPageNum(),dto.getPageNum(),totalCount,records);
+        return  new ResponseListVO<>(dto.getPageNum(),dto.getPageNum(),totalCount,records);
     }
 
     @Override
@@ -113,14 +119,20 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
 
     @Override
     public Boolean assignIssueDealUser(String issueId, String dUid, String opUid) {
+        //判断用户是否存在
+        Boolean isisExistUser  =  userService.isExistUser(dUid);
+        if (!isisExistUser){
+            throw  new ResponseCommonException(HttpStatus.BAD_REQUEST,"指派用户不存在,请确认是否正确");
+        }
         Issues issues = new Issues();
         issues.setId(issueId);
         issues.setDUid(dUid);
         Boolean isUpdate = this.updateById(issues);
-        StringBuilder issueLog = new StringBuilder();
         if (isUpdate){
-            issueLog.append(opUid).append("将任务").append(issueId).append("指派给了用户")
-                    .append(dUid);
+            StringBuilder issueLog = new StringBuilder();
+            String dUserName = userService.getTrueName(dUid);
+            String oPserName = userService.getTrueName(dUid);
+            issueLog.append(oPserName).append("指派了任务").append("给" + oPserName);
             sendIssueOpLog(issueId,opUid,issueLog.toString());
         }
         return isUpdate;
@@ -140,7 +152,7 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
         issuesOpLogService.save(issuesOpLog);
         try {
             JSONObject response = new JSONObject();
-            response.put("type","oplog");
+            response.put("type", AfsWssMsgTypeEnum.ISSUE_OP_LOG);
             afterSafeIssueWebsocket.sendMessage(issuesOpLog);
         } catch (IOException e) {
             log.error("问题操作日志发送失败",e);

@@ -1,12 +1,16 @@
 package com.cdxt.backend.websockt;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cdxt.backend.enums.AfsWssMsgTypeEnum;
+import com.cdxt.backend.service.UserService;
 import com.cdxt.common.enums.ResponseMsgType;
 import com.cdxt.common.exception.ResponseCommonException;
 import com.cdxt.common.pojo.vo.ResultVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.websocket.*;
@@ -28,6 +32,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RestController
 public class AfterSafeIssueWebsocket {
 
+    @Autowired
+    UserService userService;
+
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static AtomicInteger onlineNum = new AtomicInteger();
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
@@ -41,12 +48,13 @@ public class AfterSafeIssueWebsocket {
         sessionPools.put(uid, session);
         addOnlineCount();
         JSONObject message = new JSONObject();
-        message.put("type","notice");
-        message.put("data","uid 用户进入问题处理系统");
+        String trueName = userService.getTrueName(uid);
+        message.put("type", AfsWssMsgTypeEnum.LOG);
+        message.put("data", StringUtils.isEmpty(trueName)? uid: trueName  + "用户进入问题处理系统");
         try {
             sendMessage(message);
         } catch (IOException e) {
-            log.error("wss: //wss//afs//issue 发送消息失败",e);
+            log.error("wss: //wss//afs//issue 建立连接发送消息失败",e);
         }
     }
 
@@ -57,12 +65,13 @@ public class AfterSafeIssueWebsocket {
     public void onClose(@PathParam("uid") String uid) {
         sessionPools.remove(uid);
         JSONObject message = new JSONObject();
-        message.put("type","notice");
-        message.put("data","uid 用户离开问题处理系统");
+        message.put("type",AfsWssMsgTypeEnum.LOG);
+        String trueName = userService.getTrueName(uid);
+        message.put("data",StringUtils.isEmpty(trueName)? uid: trueName + "用户离开问题处理系统");
         try {
             sendMessage(message);
         } catch (IOException e) {
-            log.error("wss: //wss//afs//issue 发送消息失败",e);
+            log.error("wss: //wss//afs//issue 关闭连接发送消息失败",e);
         }
     }
 
@@ -75,7 +84,6 @@ public class AfterSafeIssueWebsocket {
     public void onMessage(String message) {
         log.info("收到消息" + message);
         System.out.println();
-
     }
 
     /**

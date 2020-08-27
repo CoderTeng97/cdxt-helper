@@ -15,6 +15,7 @@ import com.cdxt.backend.websockt.AfterSafeIssueWebsocket;
 import com.cdxt.common.annotation.ControllerResponseProcessor;
 import com.cdxt.common.base.BaseController;
 import com.cdxt.common.pojo.vo.ResponseListVO;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,29 +46,32 @@ public class IssueController extends BaseController {
         }
     }
 
+    @ApiOperation("发布问题任务")
     @PutMapping("/release")
     public Boolean releaseIssue(@RequestBody IssuesPostDTO  dto){
         dto.setpUid(getUid());
         return issuesService.releaseIssue(dto);
     }
-
+    @ApiOperation("更新问题处理状态")
     @PostMapping("/updateState")
     public Boolean updateState(IssuesUpdateDTO dto){
         return issuesService.updateIssueState(dto,getUid());
     }
 
-
+    @ApiOperation("查询问题列表")
     @PostMapping("/list")
-    public ResponseListVO<IssuesViewVO> searchIssue(IssuesQueryDTO dto){
+    public ResponseListVO<IssuesViewVO> searchIssueList(IssuesQueryDTO dto){
         return issuesService.searchIssueList(dto);
     }
 
+    @ApiOperation("根据问题Id查询详情")
     @GetMapping("/detail/{issueId}")
     public IssuesDetailVO issueDetail(@PathVariable String issueId){
         return issuesService.issueDetail(issueId);
     }
 
 
+    @ApiOperation("获取所有问题操作历史日志记录")
     @GetMapping("/history-log")
     public ResponseListVO<IssuesOpLog> getIssueLogList(
             @RequestParam(required = false,defaultValue = "1") Long pageNum,
@@ -78,11 +82,7 @@ public class IssueController extends BaseController {
         return vo;
     }
 
-    @GetMapping("/watchkeeperList/{pageNum}/{pageSize}")
-    public ResponseListVO getWatchkeeper(@PathVariable Integer pageNum,
-                                         @PathVariable Integer pageSize){
-        return null;
-    }
+
 
     /**
      * 指派用户
@@ -90,13 +90,12 @@ public class IssueController extends BaseController {
      * @param dUid
      * @return
      */
-    @GetMapping("/assignUser/{issueId}")
+    @ApiOperation("指派问题任务给用户")
+    @GetMapping("/assignUser")
     public Boolean updateState(
-            @PathVariable(value = "issueId") String issueId,
-                            @RequestParam(required = true)
-                            String dUid){
-
-        return false;
+                            @RequestParam String issueId,
+                            @RequestParam String dUid){
+        return issuesService.assignIssueDealUser(issueId,dUid,getUid());
     }
 
 

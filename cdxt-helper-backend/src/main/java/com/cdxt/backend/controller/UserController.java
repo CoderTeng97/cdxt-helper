@@ -1,22 +1,32 @@
 package com.cdxt.backend.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.cdxt.backend.model.WatchList;
 import com.cdxt.backend.pojo.dto.UserLoginDTO;
 import com.cdxt.backend.model.User;
+import com.cdxt.backend.pojo.vo.WatcherVO;
 import com.cdxt.backend.service.UserService;
+import com.cdxt.backend.service.WatchListService;
 import com.cdxt.common.annotation.ControllerResponseProcessor;
+import com.cdxt.common.base.BaseController;
+import com.cdxt.common.pojo.vo.ResponseListVO;
 import com.cdxt.common.pojo.vo.UserBaseVO;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @ControllerResponseProcessor
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController {
     @Autowired
     UserService userService;
+    @Autowired
+    WatchListService watchListService;
 
 
     /**
@@ -54,6 +64,22 @@ public class UserController {
                     String role
     ){
         return  userService.getUserList(text,role);
+    }
+
+    @ApiOperation("获取值班人员列表")
+    public List<WatcherVO> getWatcher(){
+        List<WatcherVO>  result = watchListService.getWatcher();
+        return  result;
+    }
+
+    @ApiOperation("设置值班人员")
+    public Boolean setWather(
+            @RequestParam String uid,
+            @RequestParam LocalDateTime endTime,
+            @RequestParam(required = false,defaultValue = "1" ) String type
+    ){
+
+        return watchListService.setWather(uid,endTime,type);
     }
 
 }

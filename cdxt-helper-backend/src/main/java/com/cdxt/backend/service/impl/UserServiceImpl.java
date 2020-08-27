@@ -74,4 +74,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public String getTrueName(String uid) {
       return   baseMapper.selectTrueNameById(uid);
     }
+
+    @Override
+    public Boolean isExistUser(String uid) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",uid);
+        Integer count = baseMapper.selectCount(queryWrapper);
+        return count > 0 ?true : false;
+    }
 }
