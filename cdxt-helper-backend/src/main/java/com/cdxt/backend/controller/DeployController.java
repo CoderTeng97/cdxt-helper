@@ -34,7 +34,6 @@ import java.io.IOException;
 public class DeployController extends BaseController {
     @Autowired
     DeployPostService deployPostService;
-
     @Autowired
     HospitalService hospitalService;
 

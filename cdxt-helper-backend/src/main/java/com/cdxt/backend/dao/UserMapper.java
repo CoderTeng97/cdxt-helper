@@ -19,6 +19,19 @@ public interface UserMapper extends BaseMapper<User> {
 
    UserBaseVO selectByUserLoginDTO(UserLoginDTO dto);
 
+   /**
+    * 查询邮箱
+    * @param id
+    * @return
+    */
    @Select("select EMAIL from  tb_user where id=#{id}")
    String selectEmailById(@Param("id") String id);
+
+   /**
+    * 查询真实姓名
+    * @param id
+    * @return
+    */
+   @Select("select true_name from  tb_user where id=#{id}")
+   String selectTrueNameById(@Param("id") String... id);
 }

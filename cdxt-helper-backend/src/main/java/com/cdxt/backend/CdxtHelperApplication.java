@@ -11,7 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @ComponentScan( basePackages = {"com.cdxt"})
-@MapperScan(basePackages = {"com.cdxt.backend.deploy.dao"})
+@MapperScan(basePackages = {"com.cdxt.backend.dao"})
 public class CdxtHelperApplication {
     public static void main(String[] args) {
         SpringApplication.run(CdxtHelperApplication.class,args);

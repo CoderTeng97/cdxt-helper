@@ -25,4 +25,127 @@
         id, title, detail, classification, priority_code, d_uid, v_uid, p_uid, state, module, gmt_create, gmt_modified, gmt_completion, is_del
     </sql>
 
+
+    <!-- 详情结果列 -->
+    <resultMap id="DetailResultMap" type="com.cdxt.backend.pojo.vo.IssuesDetailVO" extends="BaseResultMap">
+        <result column="d_user" property="dUser" />
+        <result column="v_user" property="vUser" />
+        <result column="p_user" property="pUser" />
+        <result column="hospital_name" property="hospitalName" />
+        <collection property="opLogs" ofType="com.cdxt.backend.model.IssuesOpLog">
+            <id column="id" property="id" />
+            <result column="isid" property="isid" />
+            <result column="content" property="content" />
+            <result column="uid" property="uid" />
+            <result column="gmt_create" property="gmtCreate" />
+        </collection>
+    </resultMap>
+    <sql id="Detail_Column_List">
+        ti.id,ti.title,ti.detail,ti.classification,ti.priority_code,ti.state,ti.module,ti.gmt_create,ti.gmt_completion,
+        du.true_name as d_user,pu.true_name as p_user,vu.true_name as v_user,
+        h.name as hospital_name,
+        tiol.*
+    </sql>
+    <select id="selectById" resultMap="DetailResultMap">
+     SELECT  * FROM tb_issues ti
+     LEFT JOIN tb_user du ON du.id = ti.d_uid
+     LEFT JOIN tb_user pu ON pu.id = ti.p_uid
+     LEFT JOIN tb_user vu ON vu.id = ti.v_uid
+     LEFT JOIN tb_hospital h ON ti.hospital_id = h.id
+     LEFT JOIN tb_issues_op_log tiol ON tiol.isid = ti.id
+     WHERE ti.id=#{id} and ti.is_del=0
+    </select>
+
+    <!-- 预览数据结果列 -->
+    <resultMap id="ViewResultMap" type="com.cdxt.backend.pojo.vo.IssuesViewVO" extends="BaseResultMap">
+        <result column="d_user" property="dUser" />
+        <result column="v_user" property="vUser" />
+        <result column="p_user" property="pUser" />
+        <result column="hospital_name" property="hospitalName" />
+    </resultMap>
+    <sql id="View_Column_List">
+        ti.id,ti.title,ti.detail,ti.classification,ti.priority_code,ti.state,ti.module,ti.gmt_create,ti.gmt_completion,
+        du.true_name as d_user,pu.true_name as p_user,vu.true_name as v_user,
+        h.name as hospital_name
+    </sql>
+    <select id="selectPageByQueryDTO" resultMap="ViewResultMap"  parameterType="com.cdxt.backend.pojo.dto.IssuesQueryDTO">
+        SELECT  <include refid="View_Column_List"></include> FROM tb_issues ti
+             LEFT JOIN tb_user du ON du.id = ti.d_uid
+             LEFT JOIN tb_user pu ON pu.id = ti.p_uid
+             LEFT JOIN tb_user vu ON vu.id = ti.v_uid
+             LEFT JOIN tb_hospital h ON ti.hospital_id = h.id
+             LEFT JOIN tb_issues_op_log tiol ON tiol.isid = ti.id
+             <where>
+                    1 = 1
+                 <if test="title!=null and title!=''">
+                     and  ti.title like concat('%',#{title},'%')
+                 </if>
+
+                 <if test="classification!=null and classification!=''">
+                     and  ti.classification =#{classification}
+                 </if>
+
+                 <if test="priorityCode!=null and priorityCode!=''">
+                     and  ti.priority_code =#{priorityCode}
+                 </if>
+                 <if test="state!=null and state!=''">
+                     and  ti.state =#{state}
+                 </if>
+                 <if test="uid!=null and uid!=''">
+                     and (d_uid = #{uid} or p_uid = #{uid} or v_uid = #{uid})
+                 </if>
+                 <if test="module!=null and module!=''">
+                     and  ti.module =#{module}
+                 </if>
+                 <if test="isDel!=null and isDel!=''">
+                     and  ti.is_del =#{isDel}
+                 </if>
+                 <if test="sortSql!=null and sortSql!=''">
+                     order by  #{sortSql}
+                 </if>
+                 limit ${(pageNum-1)*pageSize},#{pageSize}
+             </where>
+    </select>
+    <select id="selectPageByQueryDTOCount" resultType="java.lang.Long">
+        SELECT  count(1) FROM tb_issues ti
+        <where>
+            1 = 1
+            <if test="title!=null and title!=''">
+                and  ti.title like concat('%',#{title},'%')
+            </if>
+
+            <if test="classification!=null and classification!=''">
+                and  ti.classification =#{classification}
+            </if>
+
+            <if test="priorityCode!=null and priorityCode!=''">
+                and  ti.priority_code =#{priorityCode}
+            </if>
+            <if test="state!=null and state!=''">
+                and  ti.state =#{state}
+            </if>
+            <if test="uid!=null and uid!=''">
+                and (d_uid = #{uid} or p_uid = #{uid} or v_uid = #{uid})
+            </if>
+            <if test="module!=null and module!=''">
+                and  ti.module =#{module}
+            </if>
+            <if test="isDel!=null and isDel!=''">
+                and  ti.is_del =#{isDel}
+            </if>
+        </where>
+    </select>
+    <select id="selectViewColumnById" resultType="com.cdxt.backend.pojo.vo.IssuesViewVO">
+          SELECT  <include refid="View_Column_List"></include> FROM tb_issues ti
+             LEFT JOIN tb_user du ON du.id = ti.d_uid
+             LEFT JOIN tb_user pu ON pu.id = ti.p_uid
+             LEFT JOIN tb_user vu ON vu.id = ti.v_uid
+             LEFT JOIN tb_hospital h ON ti.hospital_id = h.id
+             LEFT JOIN tb_issues_op_log tiol ON tiol.isid = ti.id
+             <where>
+                is_del='0' and (d_uid = #{uid} or p_uid = #{uid} or v_uid = #{uid})
+             </where>
+    </select>
+
+
 </mapper>

@@ -42,5 +42,12 @@ public interface UserService extends IService<User> {
      */
     String getUserEmail(String uid);
 
+    /**
+     * 获取真实姓名
+     * @param uid
+     * @return
+     */
+    String getTrueName(String uid);
+
 
 }

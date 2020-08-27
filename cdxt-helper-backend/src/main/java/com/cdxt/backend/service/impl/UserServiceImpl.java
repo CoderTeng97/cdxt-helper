@@ -69,4 +69,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public String getUserEmail(String uid) {
         return baseMapper.selectEmailById(uid);
     }
+
+    @Override
+    public String getTrueName(String uid) {
+      return   baseMapper.selectTrueNameById(uid);
+    }
 }

@@ -50,7 +50,8 @@ public class WebMvcConfiguration extends WebSecurityConfigurerAdapter {
                 "/**/*.svg",
                 "/static/*/**",
                 "/user/login",
-                "/user/registry"
+                "/user/registry",
+                "/wss/**"
         );
 
         web.ignoring().antMatchers(HttpMethod.GET,

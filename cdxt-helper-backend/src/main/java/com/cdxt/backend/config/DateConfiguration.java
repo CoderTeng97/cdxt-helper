@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @Configuration
-public class DateConfig {
+public class DateConfiguration {
     /***
      * Date日期类型转换器
      * @return

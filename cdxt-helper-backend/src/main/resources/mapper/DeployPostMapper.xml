@@ -69,7 +69,6 @@
         state ASC,
         post_level DESC,
         gmt_create DESC
-
         limit ${(dto.pageNum-1)*dto.pageSize},#{dto.pageSize}
         ) dp_temp)
         ORDER BY
