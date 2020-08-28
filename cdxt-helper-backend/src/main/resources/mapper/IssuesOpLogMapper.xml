@@ -13,7 +13,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, isid, content, uid, gmt_create
+        id, isid, content, uid, gmt_create,extras_text
     </sql>
 
 </mapper>

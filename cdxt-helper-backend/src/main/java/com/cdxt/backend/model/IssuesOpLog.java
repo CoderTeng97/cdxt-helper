@@ -38,6 +38,12 @@ public class IssuesOpLog implements Serializable {
      */
     private String content;
 
+
+    /**
+     * 附加内容
+     */
+    private String extrasText;
+
     /**
      * 操作用户
      */

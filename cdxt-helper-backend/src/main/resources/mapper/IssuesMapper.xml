@@ -62,11 +62,12 @@
         <result column="v_user" property="vUser" />
         <result column="p_user" property="pUser" />
         <result column="hospital_name" property="hospitalName" />
+        <result column="hospital_branch" property="hospitalBranch" />
     </resultMap>
     <sql id="View_Column_List">
-        ti.id,ti.title,ti.detail,ti.classification,ti.priority_code,ti.state,ti.module,ti.gmt_create,ti.gmt_completion,
+        ti.id,ti.title,ti.classification,ti.priority_code,ti.state,ti.module,ti.gmt_create,ti.gmt_completion,
         du.true_name as d_user,pu.true_name as p_user,vu.true_name as v_user,
-        h.name as hospital_name
+        h.name as hospital_name,h.branch as hospital_branch
     </sql>
     <select id="selectPageByQueryDTO" resultMap="ViewResultMap"  parameterType="com.cdxt.backend.pojo.dto.IssuesQueryDTO">
         SELECT  <include refid="View_Column_List"></include> FROM tb_issues ti

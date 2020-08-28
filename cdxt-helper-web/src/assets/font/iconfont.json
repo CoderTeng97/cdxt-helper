@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7017749",
+      "name": "校验保存",
+      "font_class": "xiaoyanbaocun",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "9559078",
+      "name": "查看详情",
+      "font_class": "ziyuan",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
       "icon_id": "386098",
       "name": "日志",
       "font_class": "rizhi",
@@ -18,13 +32,6 @@
       "font_class": "fabu",
       "unicode": "e68a",
       "unicode_decimal": 59018
-    },
-    {
-      "icon_id": "6494894",
-      "name": "详情",
-      "font_class": "xiangqing",
-      "unicode": "e639",
-      "unicode_decimal": 58937
     },
     {
       "icon_id": "6590250",
@@ -88,13 +95,6 @@
       "font_class": "xinzeng",
       "unicode": "e75d",
       "unicode_decimal": 59229
-    },
-    {
-      "icon_id": "11933526",
-      "name": "修改",
-      "font_class": "xiugai",
-      "unicode": "e6f1",
-      "unicode_decimal": 59121
     },
     {
       "icon_id": "12637037",

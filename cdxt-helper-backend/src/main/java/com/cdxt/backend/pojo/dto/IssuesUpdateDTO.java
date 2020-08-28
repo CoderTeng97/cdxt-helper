@@ -88,20 +88,4 @@ public class IssuesUpdateDTO implements Serializable {
 
     @ApiModelProperty(value = "反馈内容" ,required =  false)
     private String feedBackText;
-
-    public String getdUid() {
-        return dUid;
-    }
-
-    public void setdUid(String dUid) {
-        this.dUid = dUid;
-    }
-
-    public String getvUid() {
-        return vUid;
-    }
-
-    public void setvUid(String vUid) {
-        this.vUid = vUid;
-    }
 }

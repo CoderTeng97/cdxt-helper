@@ -5,9 +5,10 @@ package com.cdxt.backend.enums;
  */
 public enum TaskStateEnum {
 
-    UNPROCESSED("未处理","1"),
+    UNPROCESSED("未处理","0"),
     PROCESSING("处理中","1"),
-    RESOLVE ("处理完成","1");
+    AUDIT("审核中","2"),
+    RESOLVE ("处理完成","3");
 
 
     private String label;

@@ -23,6 +23,11 @@ public class IssuesDetailVO {
      */
     private String detail;
 
+    /**
+     * 优先级代码
+     */
+    private String priorityCode;
+
 
     private String hospitalName;
 

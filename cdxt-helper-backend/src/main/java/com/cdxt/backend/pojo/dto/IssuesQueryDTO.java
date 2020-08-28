@@ -73,7 +73,7 @@ public class IssuesQueryDTO implements Serializable {
      * 是否有效
      */
     @ApiModelProperty(value = "页码" ,required =  false)
-    private Integer pageNum = 0;
+    private Integer pageNum = 1;
 
     /**
      * 是否有效

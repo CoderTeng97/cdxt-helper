@@ -14,6 +14,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
+import moment from 'moment' //时间处理
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -33,6 +35,8 @@ Vue.use(ElementUI, { locale })
 // Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+
+Vue.prototype.$moment = moment;//赋值使用
 
 new Vue({
   el: '#app',

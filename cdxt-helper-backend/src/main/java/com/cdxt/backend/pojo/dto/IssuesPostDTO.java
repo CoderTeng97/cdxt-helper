@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
  * @since 2020-08-25
  */
 @Data
-
 public class IssuesPostDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,6 +35,14 @@ public class IssuesPostDTO implements Serializable {
      */
     @ApiModelProperty(value = "问题详情" ,required =  true)
     private String detail;
+
+
+    /**
+     * 分类
+     */
+    @ApiModelProperty(value = "医院" ,required =  true)
+    private String hospitalId;
+
 
     /**
      * 优先级代码
@@ -76,28 +83,4 @@ public class IssuesPostDTO implements Serializable {
     private Boolean isAdditional = false;
 
 
-
-    public String getpUid() {
-        return pUid;
-    }
-
-    public void setpUid(String pUid) {
-        this.pUid = pUid;
-    }
-
-    public String getdUid() {
-        return dUid;
-    }
-
-    public void setdUid(String dUid) {
-        this.dUid = dUid;
-    }
-
-    public String getvUid() {
-        return vUid;
-    }
-
-    public void setvUid(String vUid) {
-        this.vUid = vUid;
-    }
 }

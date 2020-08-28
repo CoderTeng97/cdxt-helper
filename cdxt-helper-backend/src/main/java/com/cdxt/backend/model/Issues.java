@@ -41,6 +41,8 @@ public class Issues implements Serializable {
      */
     private String detail;
 
+    private String hospitalId;
+
     /**
      * 分类
      */
@@ -95,6 +97,5 @@ public class Issues implements Serializable {
      * 是否有效
      */
     private Integer isDel;
-
 
 }

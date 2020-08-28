@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.spring.web.json.Json;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,14 +64,14 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
         Boolean isSave = this.save(issues);
         //查询关联信息并返回
         //IssuesViewVO issuesViewVO = baseMapper.selectViewColumnById(issues.getId());
-        String userName = userService.getTrueName(postDTO.getpUid());
+        String userName = userService.getTrueName(postDTO.getPUid());
         if (isSave){
             StringBuilder issueLog = new StringBuilder();
             if (postDTO.getIsAdditional()){
-                issueLog.append(userName + "发布了问题任务:")
+                issueLog.append(userName + "补录了问题任务:")
                         .append(postDTO.getTitle());
             }else{
-                issueLog.append(userName + "补录了问题任务:")
+                issueLog.append(userName + "发布了问题任务:")
                         .append(postDTO.getTitle());
             }
             sendIssueOpLog(issues.getId(),issues.getPUid(),issueLog.toString());
@@ -108,7 +109,7 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
     public ResponseListVO<IssuesViewVO> searchIssueList(IssuesQueryDTO dto) {
         List<IssuesViewVO> records =  baseMapper.selectPageByQueryDTO(dto);
         Long totalCount = baseMapper.selectPageByQueryDTOCount(dto);
-        return  new ResponseListVO<>(dto.getPageNum(),dto.getPageNum(),totalCount,records);
+        return  new ResponseListVO<>(dto.getPageNum(),dto.getPageSize(),totalCount,records);
     }
 
     @Override
@@ -118,7 +119,7 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
     }
 
     @Override
-    public Boolean assignIssueDealUser(String issueId, String dUid, String opUid) {
+    public Boolean assignIssueDealUser(String issueId, String dUid, String opUid,String feedbackText) {
         //判断用户是否存在
         Boolean isisExistUser  =  userService.isExistUser(dUid);
         if (!isisExistUser){
@@ -149,11 +150,13 @@ public class IssuesServiceImpl extends ServiceImpl<IssuesMapper, Issues> impleme
         issuesOpLog.setIsid(issueId);
         issuesOpLog.setContent(content);
         issuesOpLog.setUid(uid);
+        issuesOpLog.setGmtCreate(LocalDateTime.now());
         issuesOpLogService.save(issuesOpLog);
         try {
             JSONObject response = new JSONObject();
             response.put("type", AfsWssMsgTypeEnum.ISSUE_OP_LOG);
-            afterSafeIssueWebsocket.sendMessage(issuesOpLog);
+            response.put("data",issuesOpLog);
+            afterSafeIssueWebsocket.sendMessage(response);
         } catch (IOException e) {
             log.error("问题操作日志发送失败",e);
         }

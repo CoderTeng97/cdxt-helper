@@ -57,5 +57,5 @@ public interface IssuesService extends IService<Issues> {
      * @param dUid
      * @return
      */
-    Boolean assignIssueDealUser(String issueId,String dUid,String opUid);
+    Boolean assignIssueDealUser(String issueId,String dUid,String opUid,String feedbackText);
 }

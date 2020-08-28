@@ -6,8 +6,10 @@ import com.cdxt.backend.service.UserService;
 import com.cdxt.common.enums.ResponseMsgType;
 import com.cdxt.common.exception.ResponseCommonException;
 import com.cdxt.common.pojo.vo.ResultVO;
+import com.cdxt.common.utils.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -32,14 +34,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RestController
 public class AfterSafeIssueWebsocket {
 
-    @Autowired
-    UserService userService;
+    //注入service
+    private static ApplicationContext applicationContext;
+    private UserService userService;
+    public static void setApplicationContext(ApplicationContext applicationContext) {
+        AfterSafeIssueWebsocket.applicationContext = applicationContext;
+    }
 
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static AtomicInteger onlineNum = new AtomicInteger();
     //concurrent包的线程安全Set，用来存放每个客户端对应的WebSocketServer对象。
     private static ConcurrentHashMap<String, Session> sessionPools = new ConcurrentHashMap<>();
-
     /**
      * 连接建立成功调用的方法
      */
@@ -48,9 +53,12 @@ public class AfterSafeIssueWebsocket {
         sessionPools.put(uid, session);
         addOnlineCount();
         JSONObject message = new JSONObject();
+        if (null == userService){
+            userService = applicationContext.getBean(UserService.class);
+        }
         String trueName = userService.getTrueName(uid);
         message.put("type", AfsWssMsgTypeEnum.LOG);
-        message.put("data", StringUtils.isEmpty(trueName)? uid: trueName  + "用户进入问题处理系统");
+        message.put("data", StringUtils.isEmpty(trueName)? uid: trueName  + "进入问题处理系统");
         try {
             sendMessage(message);
         } catch (IOException e) {
@@ -67,7 +75,7 @@ public class AfterSafeIssueWebsocket {
         JSONObject message = new JSONObject();
         message.put("type",AfsWssMsgTypeEnum.LOG);
         String trueName = userService.getTrueName(uid);
-        message.put("data",StringUtils.isEmpty(trueName)? uid: trueName + "用户离开问题处理系统");
+        message.put("data",StringUtils.isEmpty(trueName)? uid: trueName + "离开问题处理系统");
         try {
             sendMessage(message);
         } catch (IOException e) {

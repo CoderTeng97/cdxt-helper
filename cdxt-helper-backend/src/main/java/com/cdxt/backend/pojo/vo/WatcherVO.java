@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class WatcherVO {
+
     private Integer id;
     /**
      * 值班人员姓名

@@ -47,20 +47,20 @@ public class IssueController extends BaseController {
     }
 
     @ApiOperation("发布问题任务")
-    @PutMapping("/release")
+    @PostMapping("/release")
     public Boolean releaseIssue(@RequestBody IssuesPostDTO  dto){
-        dto.setpUid(getUid());
+        dto.setPUid(getUid());
         return issuesService.releaseIssue(dto);
     }
     @ApiOperation("更新问题处理状态")
     @PostMapping("/updateState")
-    public Boolean updateState(IssuesUpdateDTO dto){
+    public Boolean updateState(@RequestBody IssuesUpdateDTO dto){
         return issuesService.updateIssueState(dto,getUid());
     }
 
     @ApiOperation("查询问题列表")
     @PostMapping("/list")
-    public ResponseListVO<IssuesViewVO> searchIssueList(IssuesQueryDTO dto){
+    public ResponseListVO<IssuesViewVO> searchIssueList(@RequestBody  IssuesQueryDTO dto){
         return issuesService.searchIssueList(dto);
     }
 
@@ -86,16 +86,13 @@ public class IssueController extends BaseController {
 
     /**
      * 指派用户
-     * @param issueId 问题id
-     * @param dUid
+     * @param dto 问题更新对象
      * @return
      */
     @ApiOperation("指派问题任务给用户")
     @GetMapping("/assignUser")
-    public Boolean updateState(
-                            @RequestParam String issueId,
-                            @RequestParam String dUid){
-        return issuesService.assignIssueDealUser(issueId,dUid,getUid());
+    public Boolean assignUser(@RequestBody IssuesUpdateDTO dto){
+        return issuesService.assignIssueDealUser(dto.getId(),dto.getDUid(),getUid(),dto.getFeedBackText());
     }
 
 

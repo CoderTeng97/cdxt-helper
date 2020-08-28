@@ -234,7 +234,7 @@ export default {
         let res = await getHospital({
           text: query,
           pageNum: 1,
-          pageSize: 1000
+          pageSize: 50
         });
         this.hospitals = res.records;
         console.log(res);

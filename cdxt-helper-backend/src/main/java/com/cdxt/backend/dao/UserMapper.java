@@ -33,5 +33,5 @@ public interface UserMapper extends BaseMapper<User> {
     * @return
     */
    @Select("select true_name from  tb_user where id=#{id}")
-   String selectTrueNameById(@Param("id") String... id);
+   String selectTrueNameById(@Param("id") String id);
 }

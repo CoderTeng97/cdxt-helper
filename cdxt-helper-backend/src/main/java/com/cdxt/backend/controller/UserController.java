@@ -67,13 +67,15 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation("获取值班人员列表")
+    @GetMapping("/watcher/list")
     public List<WatcherVO> getWatcher(){
         List<WatcherVO>  result = watchListService.getWatcher();
         return  result;
     }
 
     @ApiOperation("设置值班人员")
-    public Boolean setWather(
+    @PutMapping("/watcher/set")
+    public Boolean setWatcher(
             @RequestParam String uid,
             @RequestParam LocalDateTime endTime,
             @RequestParam(required = false,defaultValue = "1" ) String type
