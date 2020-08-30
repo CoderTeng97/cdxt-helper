@@ -34,3 +34,11 @@ export function getUserList(role,text) {
     }
   })
 }
+
+export function setWatcher(data) {
+  return request({
+    url: '/user/watcher/set',
+    method: 'get',
+    params:data
+  })
+}

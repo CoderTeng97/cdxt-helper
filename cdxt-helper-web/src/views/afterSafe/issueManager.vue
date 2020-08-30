@@ -30,7 +30,14 @@
           <div class="box-header">
             <el-row>
               <el-col :span="14">
-                <i class="iconfont icon-zhibanrenyuan"></i> 问题处理人员 (在线 {{watcehrOnlieInfo.onlineCount}})
+                <i class="iconfont icon-zhibanrenyuan"></i>
+                问题处理人员 (在线 {{watcehrOnlieInfo.onlineCount}})
+                <i
+                  class="el-icon-setting"
+                  @click="watcherSetDialogVisible = true"
+                  style=" cursor: pointer;font-size: 18px;color: #2196F3;margin-left: 10px;"
+                  v-if="role == 'admin'"
+                ></i>
               </el-col>
               <el-col :span="10"></el-col>
             </el-row>
@@ -44,7 +51,7 @@
               <el-table-column prop="trueName" label="姓名"></el-table-column>
               <el-table-column prop="module" label="负责模块" :formatter="moduleFormat"></el-table-column>
               <el-table-column prop="gmtEndTime" label="值班结束时间"></el-table-column>
-              <el-table-column label="上线状态">{{onlieState == 1 ? '离线':'在线'  }}</el-table-column>
+              <el-table-column label="上线状态">{{onlieState == 1 ? '离线':'在线' }}</el-table-column>
             </el-table>
           </div>
         </div>
@@ -64,15 +71,22 @@
           </div>
           <div class="box-main">
             <el-button @click="issuePostForm.isAdditional=false,showDiaglog('issuePost')">发布问题</el-button>
-            <el-button @click="issuePostForm.isAdditional=true,showDiaglog('issueAdditional')">补录已完成问题</el-button>
+            <el-button
+              @click="issuePostForm.isAdditional=true,showDiaglog('issueAdditional')"
+            >补录已完成问题</el-button>
             <i class="iconfont icon-shuaxincopy" style="margin-left:20px;"></i>
-            <el-table :data="issueTable.records" style="width: 100%" max-height="250">
+            <el-table :data="issueTable.records" style="width: 100%" max-height="400">
               <el-table-column fixed prop="title" label="标题" width="300"></el-table-column>
               <el-table-column prop="hospitalName" label="医院" width="200"></el-table-column>
               <el-table-column prop="hospitalBranch" label="所属分支" width="120"></el-table-column>
-              <el-table-column prop="module" label="所属模块" width="120" :formatter = "moduleFormat"></el-table-column>
-              <el-table-column prop="priorityCode" label="紧急程度" width="120"  :formatter = "priorityCodeFormat"></el-table-column>
-              <el-table-column prop="state" label="任务状态" width="120" :formatter = "stateFormat"></el-table-column>
+              <el-table-column prop="module" label="所属模块" width="120" :formatter="moduleFormat"></el-table-column>
+              <el-table-column
+                prop="priorityCode"
+                label="紧急程度"
+                width="120"
+                :formatter="priorityCodeFormat"
+              ></el-table-column>
+              <el-table-column prop="state" label="任务状态" width="120" :formatter="stateFormat"></el-table-column>
               <el-table-column
                 label="发布时间"
                 width="150"
@@ -85,23 +99,62 @@
               <el-table-column prop="duser" label="处理人员" width="120"></el-table-column>
               <el-table-column fixed="right" label="操作" width="120">
                 <template slot-scope="scope">
-                  <el-tooltip class="item" effect="dark" content="开始" placement="top-start" v-if="issueTable.records[scope.$index].state==0">
-                    <i class="iconfont icon-xiaoyan" @click="issueUpdateForm.id= issueTable.records[scope.$index].id,issueStart()"></i>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="开始"
+                    placement="top-start"
+                    v-if="issueTable.records[scope.$index].state==0 && role == 'developer' "
+                  >
+                    <i
+                      class="iconfont icon-xiaoyan"
+                      @click="issueUpdateForm.id= issueTable.records[scope.$index].id,issueStart()"
+                    ></i>
                   </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="指派" placement="top-start" v-if="issueTable.records[scope.$index].state==0 || issueTable.records[scope.$index].state==1">
-                    <i class="iconfont icon-zhipai" @click="issueUpdateForm.id= issueTable.records[scope.$index].id,showDiaglog('issueAssignUser')"></i>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="指派"
+                    placement="top-start"
+                    v-if="role == 'developer' && (issueTable.records[scope.$index].state==0 || issueTable.records[scope.$index].state==1)"
+                  >
+                    <i
+                      class="iconfont icon-zhipai"
+                      @click="issueUpdateForm.id= issueTable.records[scope.$index].id,showDiaglog('issueAssignUser')"
+                    ></i>
                   </el-tooltip>
 
-                  <el-tooltip class="item" effect="dark" content="完成" placement="top-start"  v-if="issueTable.records[scope.$index].state==1">
-                    <i class="iconfont icon-wancheng5" @click="issueUpdateForm.id= issueTable.records[scope.$index].id,showDiaglog('issueCompletion')"></i>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="完成"
+                    placement="top-start"
+                    v-if="issueTable.records[scope.$index].state==1&& role == 'developer'"
+                  >
+                    <i
+                      class="iconfont icon-wancheng5"
+                      @click="issueUpdateForm.id= issueTable.records[scope.$index].id,showDiaglog('issueCompletion')"
+                    ></i>
                   </el-tooltip>
 
                   <el-tooltip class="item" effect="dark" content="详情" placement="top-start">
-                    <i class="iconfont icon-ziyuan" @click="issueUpdateForm.id= issueTable.records[scope.$index].id,showDiaglog('issueDetail')"></i>
+                    <i
+                      class="iconfont icon-ziyuan"
+                      @click="showIssueDetailDialog(issueTable.records[scope.$index].id)"
+                    ></i>
                   </el-tooltip>
 
-                  <el-tooltip class="item" effect="dark" content="审核" placement="top-start" v-if="issueTable.records[scope.$index].state == 2">
-                    <i class="iconfont icon-xiaoyanbaocun" @click="issueUpdateForm.id= issueTable.records[scope.$index].id,showDiaglog('issueAuth')"></i>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="审核"
+                    placement="top-start"
+                    v-if="issueTable.records[scope.$index].state == 2 && role == 'after-safe'"
+                  >
+                    <i
+                      class="iconfont icon-xiaoyanbaocun"
+                      @click="issueUpdateForm.id= issueTable.records[scope.$index].id,showDiaglog('issueAuth')"
+                    ></i>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -234,6 +287,51 @@
         <el-button v-if="issueDialogConfig.name == 'issueCompletion'" @click="issueComplet">确认完成</el-button>
       </div>
     </el-dialog>
+    <!-- 问题详情弹窗 -->
+    <el-dialog title="问题详情" :visible.sync="issueDetailDialogVisible" width="80%">
+      <el-row>
+        <el-col :span="24">
+          <el-divider content-position="left">问题详情</el-divider>
+          <div v-html="issueDetail.detail"></div>
+        </el-col>
+
+        <el-col :span="24">
+          <el-divider content-position="left">问题操作日志</el-divider>
+          <el-timeline>
+            <el-timeline-item
+              v-for="(item, index) in issueDetail.opLogs"
+              :key="index"
+              :timestamp="$moment(item.gmtCreate).format('YYYY-MM-DD HH:MM:SS')"
+            >
+              <el-card>
+                <h4>{{item.content}}</h4>
+                <div
+                  v-if="item.extrasText != '' && item.extrasText != null "
+                  v-html="item.extrasText"
+                ></div>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </el-col>
+      </el-row>
+    </el-dialog>
+
+    <!-- 值班人员设置弹窗 -->
+    <el-dialog title="值班人员设置" :visible.sync="watcherSetDialogVisible" width="40%" >
+      <el-form :inline="true" :model="watcherSetForm" class="demo-form-inline"  :rules="watcherSetFormRules"
+        ref="watcherSetForm">
+        <el-form-item label="用户" prop="uid">
+          <UserSearchSelect :role="developer" v-model="watcherSetForm.uid"></UserSearchSelect>
+        </el-form-item>
+        <el-form-item label="值班结束时间" prop="gmtEndTime">
+          <el-date-picker v-model="watcherSetForm.gmtEndTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="resetForm('watcherSetForm')">清空</el-button>
+        <el-button @click="commonSubmit('watcherSetForm')">设置</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -249,11 +347,16 @@ import {
   getWatcherList,
   issueAssign,
   updateIssueState,
-  getOnlineUserList
+  getOnlineUserList,
+  getIssueDetail
 } from "@/api/issue";
 import { getHospital } from "../../api/deploy";
+import {setWatcher} from "@/api/user"
 import UserSearchSelect from "@/components/Common/UserSearchSelect";
 import HospitalSearchSelect from "@/components/Common/HospitalSearchSelect";
+import { quillRedefine } from "vue-quill-editor-upload";
+import { mapGetters } from "vuex";
+import { formatTime } from '../../utils';
 
 const issueDialogConfigs = {
   issuePost: {
@@ -287,23 +390,30 @@ export default {
   },
   data() {
     return {
-      watcehrOnlieInfo:{},//在线人员情况信息
+      watcherSetDialogVisible: false,
+      issueDetailDialogVisible: false, //问题详情弹窗展示
+      watcehrOnlieInfo: {}, //在线人员情况信息
       websock: null,
       commonDialogVisible: false, //通用弹窗对象
       logList: [], //日志模块数据,
-      watcherList: [], //值班人员列表
+      watcherList: [], //值班人员列表,
+      issueDetail: {}, //问题详情
+      watcherSetForm: {
+        uid: "",
+        gmtEndTime: null
+      },
       issueUpdateForm: {
-        title:"",
-        duid:"",
-        feedBackText:"",
+        title: "",
+        duid: "",
+        feedBackText: ""
       }, //问题更新表单
       issuePostForm: {
-        title: '',
-        duid:'',
-        module:'',
-        hospitalId:'',
-        detail:'',
-        priorityCode:'',
+        title: "",
+        duid: "",
+        module: "",
+        hospitalId: "",
+        detail: "",
+        priorityCode: ""
       }, //问题发布表单对象
       issuePostIsAddtional: false,
       hospitalSelectLoading: false, //医院搜索加载
@@ -323,6 +433,10 @@ export default {
         ],
         duid: [{ required: true, message: "请选择处理人员", trigger: "change" }]
       },
+      watcherSetFormRules:{
+         uid: [{ required: true, message: "值班人员不能为空", trigger: "change" }],
+         gmtEndTime: [{ required: true, message: "值班结束时间不能为空", trigger: "change" }],
+      },
       issueSearchParams: {
         // 问题列表查询参数
         pageNum: 1,
@@ -335,36 +449,65 @@ export default {
         total: 0,
         records: []
       }, // 问题列表
-      issueDialogConfig: {} //弹窗配置
+      issueDialogConfig: {}, //弹窗配置
+
+      editorOption: {}
     };
   },
   methods: {
-    moduleFormat(row, column){
-        switch(row.module){
-          case '1' : return '住院'; break;
-          case '2' : return '护士'; break;
-          case '3' : return '药品'; break;
-          case '4' : return '门诊'; break;
-          default : '' ;
-        }　　　　
+    moduleFormat(row, column) {
+      switch (row.module) {
+        case "1":
+          return "住院";
+          break;
+        case "2":
+          return "护士";
+          break;
+        case "3":
+          return "药品";
+          break;
+        case "4":
+          return "门诊";
+          break;
+        default:
+          "";
+      }
     },
-    priorityCodeFormat(row, column){
-        switch(row.priorityCode){
-          case '1' : return '低'; break;
-          case '2' : return '中'; break;
-          case '3' : return '高'; break;
-          case '4' : return '紧急'; break;
-          default : '' ;
-        }　　　　
+    priorityCodeFormat(row, column) {
+      switch (row.priorityCode) {
+        case "1":
+          return "低";
+          break;
+        case "2":
+          return "中";
+          break;
+        case "3":
+          return "高";
+          break;
+        case "4":
+          return "紧急";
+          break;
+        default:
+          "";
+      }
     },
-    stateFormat(row, column){
-        switch(row.state){
-          case '0' : return "未处理"; break;
-          case '1' : return '处理中'; break;
-          case '2' : return '审核中'; break;
-          case '3' : return '已处理'; break;
-          default : '' ;
-        }　　　　
+    stateFormat(row, column) {
+      switch (row.state) {
+        case "0":
+          return "未处理";
+          break;
+        case "1":
+          return "处理中";
+          break;
+        case "2":
+          return "审核中";
+          break;
+        case "3":
+          return "已处理";
+          break;
+        default:
+          "";
+      }
     },
     hospitalValueBindEvent(value) {},
 
@@ -373,7 +516,7 @@ export default {
      */
     initWebSocket() {
       //初始化weosocket
-      const wsuri = "ws://127.0.0.1:9028/wss/afs/issue/1265647429739417600";
+      const wsuri = "ws://127.0.0.1:9028/wss/afs/issue/" + this.uid;
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onopen = this.websocketonopen;
@@ -447,15 +590,15 @@ export default {
      * @param isAddtional 是否补录
      */
     commonSubmit(formName) {
-      
-      console.log(this.issuePostForm)
       let isSubmit = false;
       this.$refs[formName].validate(valid => {
         if (valid) {
           switch (formName) {
             case "issuePostForm":
-              isSubmit = this.postIssue({...this.issuePostForm});
+              isSubmit = this.postIssue({ ...this.issuePostForm });
               break;
+            case "watcherSetForm":
+              isSubmit = this.setWatcher({ ...this.watcherSetForm });
             default:
           }
           if (isSubmit) {
@@ -470,13 +613,11 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-      this.issuePostForm.duid = ''
-      this.issuePostForm.detail = ''
-      this.issuePostForm.hospitalId = ''
-      this.issueUpdateForm.duid = ''
-      this.issueUpdateForm.feedBackText=''
-
-
+      this.issuePostForm.duid = "";
+      this.issuePostForm.detail = "";
+      this.issuePostForm.hospitalId = "";
+      this.issueUpdateForm.duid = "";
+      this.issueUpdateForm.feedBackText = "";
     },
     /**
      * 发布问题
@@ -484,14 +625,14 @@ export default {
     async postIssue(issuePostForm) {
       let res = postIssue(issuePostForm);
       console.log("res:", res);
-      
+
       if (res) {
         this.commonDialogVisible = false;
         this.$message({
           message: "上传成功！",
           type: "success"
         });
-      } 
+      }
       return res;
     },
     async updateIssue() {
@@ -512,6 +653,14 @@ export default {
       console.log("ces");
       let res = await searchIssue(this.issueSearchParams);
       this.issueTable = res;
+    },
+    showIssueDetailDialog(issueId) {
+      this.getIssueDetail(issueId);
+      this.issueDetailDialogVisible = true;
+    },
+    async getIssueDetail(issueId) {
+      let res = await getIssueDetail(issueId);
+      this.issueDetail = res;
     },
 
     /**
@@ -559,6 +708,16 @@ export default {
       let res = await getWatcherList();
       this.watcherList = res;
     },
+    async setWatcher(formData) {
+      let res = await setWatcher(formData);
+      if (res) {
+        this.$message({
+          message: "设置成功！",
+          type: "success"
+        });
+      }
+      return res;
+    },
     /**
      * 通用展示弹窗
      */
@@ -569,19 +728,19 @@ export default {
       this.commonDialogVisible = true;
       this.issueDialogConfig.name = name;
     },
-        /**
+    /**
      * 问题开始
      */
     issueStart() {
       this.issueUpdateForm.state = 1;
-      this.updateIssueState()
+      this.updateIssueState();
     },
     /**
      * 问题任务处理完成
      */
     issueComplet() {
       this.issueUpdateForm.state = 2;
-      this.updateIssueState()
+      this.updateIssueState();
     },
 
     /**
@@ -589,24 +748,27 @@ export default {
      */
     issueReturn() {
       this.issueUpdateForm.state = 1;
-      this.updateIssueState()
+      this.updateIssueState();
     },
     /**
      * 问题任务审核完成
      */
     issueAuthAccess() {
       this.issueUpdateForm.state = 3;
-      this.updateIssueState()
+      this.updateIssueState();
     },
     async updateIssueState() {
-      if (undefined !=this.issueUpdateForm.state && this.issueUpdateForm.state!='') {
+      if (
+        undefined != this.issueUpdateForm.state &&
+        this.issueUpdateForm.state != ""
+      ) {
         let res = await updateIssueState(this.issueUpdateForm);
         if (res) {
           this.$message({
             message: "操作成功",
             type: "success"
           });
-          this.resetForm("issueUpdateForm")
+          this.resetForm("issueUpdateForm");
           this.commonDialogVisible = false;
         }
       } else {
@@ -620,7 +782,10 @@ export default {
      * 任务指派
      */
     async issueAssign() {
-      if (this.issueUpdateForm.duid == undefined || this.issueUpdateForm.duid.length==0) {
+      if (
+        this.issueUpdateForm.duid == undefined ||
+        this.issueUpdateForm.duid.length == 0
+      ) {
         this.$message({
           message: "任务处理人员信息不能为空",
           type: "error"
@@ -628,28 +793,29 @@ export default {
         return;
       }
       let res = await issueAssign(this.issueUpdateForm);
-      console.log(res)
+      console.log(res);
       if (res) {
         this.$message({
           message: "任务指派成功",
           type: "success"
         });
-        this.resetForm("issueUpdateForm")
+        this.resetForm("issueUpdateForm");
         this.commonDialogVisible = false;
       }
     },
-    async refreshWatherOnlieState(){
+    async refreshWatherOnlieState() {
       let res = await getOnlineUserList();
       this.watcehrOnlieInfo = res;
-      for (i = 0, len =arr.length; i < len; i++){ 
-          for(var onlieUid of this.watcehrOnlieInfo.onlieUserList){
-            //是否在线判断
-              let onlieState = arr[i].uid ==  onlieUid ? 1 : 0
-              arr[i].onlieState = onlieState;
-          }
-      } 
+      for (i = 0, len = arr.length; i < len; i++) {
+        for (var onlieUid of this.watcehrOnlieInfo.onlieUserList) {
+          //是否在线判断
+          let onlieState = arr[i].uid == onlieUid ? 1 : 0;
+          arr[i].onlieState = onlieState;
+        }
+      }
     }
   },
+
   mounted() {
     //初始化websocket服务
     this.initWebSocket();
@@ -670,7 +836,34 @@ export default {
     this.searchIssue((this.issueSearchParams = {}));
     this.getWatcherList();
     //初始化值班状态
-    this.refreshWatherOnlieState()
+    this.refreshWatherOnlieState();
+    //
+    this.editorOption = quillRedefine({
+      // 图片上传的设置
+      uploadConfig: {
+        action: "/dev-api/file/upload", // 必填参数 图片上传地址,这里的后台是node
+        // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
+        // 你必须把返回的数据中所包含的图片地址 return 回去
+        name: "file",
+        res: respnse => {
+          console.log(respnse);
+          //  var w=respnse.msg.img.path.indexOf('upload');
+
+          //  console.log( 'http://localhost:3000/images/' + respnse.msg.img.path.substring(w));
+
+          // 这里切记要return回你的图片地址
+          return "http://39.106.183.121/svn/1002.jpg";
+        }
+      },
+      theme: "snow" //这个是组题
+    });
+  },
+  computed: {
+    ...mapGetters({
+      uid: "uid",
+      username: "name",
+      role: "role"
+    })
   },
   destroyed() {
     this.websock.close(); //离开路由之后断开websocket连接
@@ -706,7 +899,7 @@ export default {
 }
 
 .issueBox {
-  height: 500px;
+  height: 550px;
   margin: 0 10px;
 }
 

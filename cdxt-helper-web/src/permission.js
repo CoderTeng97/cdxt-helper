@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import {getRoutersInfo, unique} from '@/utils/utils'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -28,18 +29,37 @@ router.beforeEach(async(to, from, next) => {
       //取用户信息
       const hasGetUserInfo = store.getters.name;
       const userRoles = store.getters.role;
-      console.log(userRoles)
-      console.log(router.options.routes);
+      const userRolesList = store.getters.roleRouter;
 
-      if (hasGetUserInfo && userRoles) {
+      console.log(hasGetUserInfo, userRoles, userRolesList);
+      
 
+      // // get user info，未获取用户名或者 用户权限
+      // const accessRoutes = await store.dispatch('user/generateRoutes', userRoles)
+
+      // //重置路由
+      // router.options.routes = accessRoutes
+      // router.addRoutes(accessRoutes)
+      // console.log("ddd",accessRoutes);
+      
+      
+      if (hasGetUserInfo && userRoles && userRolesList.length > 0) {
 
         next()
+
       } else {
         try {
-          // get user info
 
+          console.log("重新获取权限");
 
+          // // get user info，未获取用户名或者 用户权限
+          // const accessRoutes = await store.dispatch('user/generateRoutes', userRoles)
+          // //重置路由
+          // router.options.routes = accessRoutes
+          // router.addRoutes(accessRoutes)
+
+          // console.log("ddd",accessRoutes)
+       
           next()
         } catch (error) {
           // remove token and go to login page to re-login

@@ -30,7 +30,8 @@ import Layout from '@/layout'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
-export const constantRoutes = [
+
+export const commonRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -49,14 +50,11 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: "首页",
+      name: "Dashboard",
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-
-
-  
   {
     path: '/deploy/post',
     component: Layout,
@@ -65,7 +63,8 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/post.vue'),
-        meta: { title: '补丁发布', icon: 'form', roles: ['admin','deveper'] }
+        meta: { title: '补丁发布', icon: 'form',   },
+        roles: ['admin', "developer"]
       }
     ]
   },
@@ -78,7 +77,8 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/list.vue'),
-        meta: { title: '补丁列表', icon: 'table', roles: ['admin','deveper'] }
+        meta: { title: '补丁列表', icon: 'table',  },
+        roles: ['admin','developer','deployer']
       }
     ]
   },
@@ -91,7 +91,8 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/branchManager.vue'),
-        meta: { title: '医院分支管理', icon: 'table', roles: ['admin','deveper'] }
+        meta: { title: '医院分支管理', icon: 'table', },
+        roles: ['admin',"developer",'deployer']
       }
     ]
   },
@@ -105,21 +106,81 @@ export const constantRoutes = [
         path: '/problemPost',
         name: 'Form',
         component: () => import('../views/afterSafe/issueManager.vue'),
-        meta: { title: '售后问题管理', icon: 'table', roles: ['admin','deveper', 'aftersafo'] },
+        meta: { title: '售后问题管理', icon: 'table',  },
+        roles: ['admin', 'developer','aftersafo']
       }
     ]
   },
 
-  
-
-  // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
+ 
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
+export const constantRoutes = [
+ 
+  {
+    path: '/deploy/post',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('../views/deploy/post.vue'),
+        meta: { title: '补丁发布', icon: 'form',   },
+        roles: ['admin', "developer"]
+      }
+    ]
+  },
+
+  {
+    path: '/deploy/list',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('../views/deploy/list.vue'),
+        meta: { title: '补丁列表', icon: 'table',  },
+        roles: ['admin','developer','deployer']
+      }
+    ]
+  },
+
+  {
+    path: '/deploy/branchManager',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('../views/deploy/branchManager.vue'),
+        meta: { title: '医院分支管理', icon: 'table', },
+        roles: ['admin',"developer",'deployer']
+      }
+    ]
+  },
+
+  {
+    path: '/aftersales',
+    component: Layout,
+    meta: { title: '运维管理', icon: 'table' },
+    children: [
+      {
+        path: '/problemPost',
+        name: 'Form',
+        component: () => import('../views/afterSafe/issueManager.vue'),
+        meta: { title: '售后问题管理', icon: 'table',  },
+        roles: ['admin', 'developer','aftersafo']
+      }
+    ]
+  },
+]
+
+
+export const createRouter = () => new Router({
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: commonRoutes
 })
 
 const router = createRouter()

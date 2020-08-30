@@ -64,6 +64,17 @@ export function getWatcherList(){
     })
 }
 
+
+/**
+ * 获取问题详情
+ */
+export function getIssueDetail(issueId){
+    return request({
+        url: '/after-safe/issue/detail/' + issueId,
+        method: 'GET',
+    })
+}
+
 /**
  * 获取值班人员在线状态信息
  */

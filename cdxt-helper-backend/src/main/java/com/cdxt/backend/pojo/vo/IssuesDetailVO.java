@@ -4,6 +4,7 @@ import com.cdxt.backend.model.Issues;
 import com.cdxt.backend.model.IssuesOpLog;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -54,6 +55,24 @@ public class IssuesDetailVO {
      * 状态
      */
     private String state;
+
+    private String module;
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime gmtCreate;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime gmtModified;
+
+    /**
+     * 完成时间
+     */
+    private LocalDateTime gmtCompletion;
+
     /**
      * 问题任务操作日志
      */

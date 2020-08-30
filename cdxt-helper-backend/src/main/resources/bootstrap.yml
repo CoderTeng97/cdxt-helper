@@ -16,14 +16,9 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
 
-mybatis-plus:
-  global-config:
-    db-config:
-      select-strategy: not_empty
-
 
 file:
   upload:
     path: D:\临时文件
   download:
-    uri: 127.0.0.1/cdxt/
+    uri: http://127.0.0.1/cdxt/

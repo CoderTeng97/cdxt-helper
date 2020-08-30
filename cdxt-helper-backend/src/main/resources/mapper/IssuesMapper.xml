@@ -32,22 +32,23 @@
         <result column="v_user" property="vUser" />
         <result column="p_user" property="pUser" />
         <result column="hospital_name" property="hospitalName" />
-        <collection property="opLogs" ofType="com.cdxt.backend.model.IssuesOpLog">
-            <id column="id" property="id" />
+        <collection property="opLogs" ofType="com.cdxt.backend.model.IssuesOpLog" javaType="collection">
+            <id column="olid" property="id" />
             <result column="isid" property="isid" />
             <result column="content" property="content" />
-            <result column="uid" property="uid" />
-            <result column="gmt_create" property="gmtCreate" />
+            <result column="oluid" property="uid" />
+            <result column="extras_text" property="extrasText" />
+            <result column="ol_gmt_create" property="gmtCreate" />
         </collection>
     </resultMap>
     <sql id="Detail_Column_List">
         ti.id,ti.title,ti.detail,ti.classification,ti.priority_code,ti.state,ti.module,ti.gmt_create,ti.gmt_completion,
         du.true_name as d_user,pu.true_name as p_user,vu.true_name as v_user,
         h.name as hospital_name,
-        tiol.*
+        tiol.id as olid, tiol.isid, tiol.content, tiol.uid as oluid, tiol.gmt_create as ol_gmt_create,tiol.extras_text
     </sql>
     <select id="selectById" resultMap="DetailResultMap">
-     SELECT  * FROM tb_issues ti
+     SELECT  <include refid="Detail_Column_List"></include> FROM tb_issues ti
      LEFT JOIN tb_user du ON du.id = ti.d_uid
      LEFT JOIN tb_user pu ON pu.id = ti.p_uid
      LEFT JOIN tb_user vu ON vu.id = ti.v_uid

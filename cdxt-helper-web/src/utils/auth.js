@@ -7,7 +7,6 @@ export function getToken() {
 }
 
 export function setToken(token) {
-  console.log("sava token :" + token)
   return Cookies.set(TokenKey, token)
 }
 

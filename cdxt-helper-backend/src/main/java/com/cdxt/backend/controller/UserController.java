@@ -74,14 +74,14 @@ public class UserController extends BaseController {
     }
 
     @ApiOperation("设置值班人员")
-    @PutMapping("/watcher/set")
+    @GetMapping("/watcher/set")
     public Boolean setWatcher(
             @RequestParam String uid,
-            @RequestParam LocalDateTime endTime,
+            @RequestParam LocalDateTime gmtEndTime,
             @RequestParam(required = false,defaultValue = "1" ) String type
     ){
 
-        return watchListService.setWather(uid,endTime,type);
+        return watchListService.setWather(uid,gmtEndTime,type);
     }
 
 }

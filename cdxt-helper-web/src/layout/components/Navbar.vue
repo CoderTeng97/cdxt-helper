@@ -26,6 +26,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { resetRouter } from '@/router'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 
@@ -48,6 +49,9 @@ export default {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
+  },
+  destroyed() {
+    resetRouter(); //退出系统，重置路由
   }
 }
 </script>
