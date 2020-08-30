@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-       
+
         <div class="title"> <img :src="require('@/assets/base/favicon.svg')" alt=""  style="width:50px;height:50px;"> </div>
       </div>
 
@@ -66,8 +66,8 @@ export default {
     }
     return {
       loginForm: {
-        account: '',
-        password: ''
+        account: 'admin',
+        password: '123456'
       },
       loginRules: {
         account: [{ required: true, trigger: 'blur', validator: validatePassword }],

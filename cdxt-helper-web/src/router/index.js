@@ -49,7 +49,7 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: "首页",
       component: () => import('@/views/dashboard/index'),
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
@@ -65,7 +65,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/post.vue'),
-        meta: { title: '补丁发布', icon: 'form' }
+        meta: { title: '补丁发布', icon: 'form', roles: ['admin','deveper'] }
       }
     ]
   },
@@ -78,7 +78,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/list.vue'),
-        meta: { title: '补丁列表', icon: 'table' }
+        meta: { title: '补丁列表', icon: 'table', roles: ['admin','deveper'] }
       }
     ]
   },
@@ -91,7 +91,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/branchManager.vue'),
-        meta: { title: '医院分支管理', icon: 'table' }
+        meta: { title: '医院分支管理', icon: 'table', roles: ['admin','deveper'] }
       }
     ]
   },
@@ -105,7 +105,7 @@ export const constantRoutes = [
         path: '/problemPost',
         name: 'Form',
         component: () => import('../views/afterSafe/issueManager.vue'),
-        meta: { title: '售后问题管理', icon: 'table' },
+        meta: { title: '售后问题管理', icon: 'table', roles: ['admin','deveper', 'aftersafo'] },
       }
     ]
   },

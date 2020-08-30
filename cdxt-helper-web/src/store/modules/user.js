@@ -25,6 +25,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_ROLE: (state, role) => {
+    state.role = role
   }
 }
 
@@ -34,9 +37,10 @@ const actions = {
     const { account, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ account: account.trim(), password: password }).then(response => {
-        console.log(response)
         //const { data } = response.data
         commit('SET_TOKEN', response.token)
+        commit("SET_ROLE", response.role)
+        commit("SET_NAME", response.username)
         state.uid = response.id
         state.name = response.username
         state.role = response.role

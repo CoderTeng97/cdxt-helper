@@ -35,10 +35,10 @@ module.exports = {
     open: false,
     proxy:{
       '/dev-api': {
-        target: 'http://127.0.0.1:9028',// 要跨域的域名
+        target: 'http://192.168.191.1:9028/',// 要跨域的域名
         changeOrigin: true, // 是否开启跨域
         pathRewrite:{
-          '^/dev-api': '' 
+          '^/dev-api': ''
         }
       },
 
@@ -46,7 +46,7 @@ module.exports = {
         target: 'http://39.106.183.121:9026',// 要跨域的域名
         changeOrigin: true, // 是否开启跨域
         pathRewrite:{
-          '^/prod-api': '' 
+          '^/prod-api': ''
         }
       },
     },
