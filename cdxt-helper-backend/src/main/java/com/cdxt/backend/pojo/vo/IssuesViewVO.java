@@ -39,6 +39,7 @@ public class IssuesViewVO {
     /**
      * 分类
      */
+
     private String classification;
 
     /**

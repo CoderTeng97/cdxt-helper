@@ -34,8 +34,7 @@ import java.io.IOException;
 public class DeployController extends BaseController {
     @Autowired
     DeployPostService deployPostService;
-    @Autowired
-    HospitalService hospitalService;
+
 
     @ApiOperation("发布补丁")
     @PutMapping("/post")
@@ -66,29 +65,6 @@ public class DeployController extends BaseController {
     }
 
 
-    @ApiOperation("获取医院列表")
-    @GetMapping("/hospitals")
-    public ResponseListVO<Hospital> hospitals(
-            @RequestParam(required = false)
-            String text,
-            @RequestParam(required = true,defaultValue = "1")
-            Integer pageNum,
-            @RequestParam(required = true,defaultValue = "10")
-            Integer pageSize
-    ){
-        IPage<Hospital> iPage = hospitalService.getHospitalList(text,pageNum,pageSize);
-        ResponseListVO<Hospital> vo = new ResponseListVO<>(iPage.getCurrent(),iPage.getSize(),iPage.getTotal(),iPage.getRecords());
-        return vo;
-    }
-
-
-    @ApiOperation("更新或插入医院信息")
-    @PostMapping("/savaOrUpdateHospital")
-    public Boolean hospitals(
-           @RequestBody HospitalUpdateDTO dto
-    ){
-        return hospitalService.saveOrUpdateHospital(dto);
-    }
 
     @ControllerResponseIgnore
     @ApiOperation("下载补丁")

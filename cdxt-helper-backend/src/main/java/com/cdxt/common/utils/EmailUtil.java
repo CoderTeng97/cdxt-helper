@@ -3,6 +3,7 @@ package com.cdxt.common.utils;
 import com.sun.mail.util.MailSSLSocketFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -24,6 +25,9 @@ public class EmailUtil {
     private String host;
 
     public boolean send(String email, String content, String title) {
+        if (StringUtils.isEmpty(email)){
+            return false;
+        }
         // MLHXURFPCUVBDGUG
         String to = email;
         String from = originEmail;

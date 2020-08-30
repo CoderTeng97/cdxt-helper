@@ -27,8 +27,8 @@ public class DictD implements Serializable {
     /**
      * 字典id
      */
-    @TableId(value = "id", type = IdType.NONE)
-    private String id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Integer id;
 
     /**
      * 字典标签
@@ -44,6 +44,11 @@ public class DictD implements Serializable {
      * 是否有效
      */
     private Integer isDel;
+
+    /**
+     * 字典主档Id
+     */
+    private Integer dictId;
 
 
 }

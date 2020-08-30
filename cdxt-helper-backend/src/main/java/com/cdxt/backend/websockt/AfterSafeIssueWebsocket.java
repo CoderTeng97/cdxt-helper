@@ -1,5 +1,6 @@
 package com.cdxt.backend.websockt;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cdxt.backend.enums.AfsWssMsgTypeEnum;
 import com.cdxt.backend.service.UserService;
@@ -72,6 +73,7 @@ public class AfterSafeIssueWebsocket {
     @OnClose
     public void onClose(@PathParam("uid") String uid) {
         sessionPools.remove(uid);
+        subOnlineCount();
         JSONObject message = new JSONObject();
         message.put("type",AfsWssMsgTypeEnum.LOG);
         String trueName = userService.getTrueName(uid);
@@ -90,8 +92,6 @@ public class AfterSafeIssueWebsocket {
      */
     @OnMessage
     public void onMessage(String message) {
-        log.info("收到消息" + message);
-        System.out.println();
     }
 
     /**
@@ -126,6 +126,17 @@ public class AfterSafeIssueWebsocket {
         }
     }
 
+    /**
+     * 获取连接情况
+     * @return
+     */
+    public  JSONObject getConnection(){
+        JSONObject response = new JSONObject();
+        response.put("onlineCount",onlineNum);
+        response.put("onlieUserList",sessionPools.keys());
+        return  response;
+    }
+
     public static void addOnlineCount(){
         onlineNum.incrementAndGet();
     }
@@ -133,5 +144,7 @@ public class AfterSafeIssueWebsocket {
     public static void subOnlineCount() {
         onlineNum.decrementAndGet();
     }
+
+
 
 }

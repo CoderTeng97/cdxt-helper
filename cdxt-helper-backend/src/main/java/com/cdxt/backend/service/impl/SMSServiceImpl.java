@@ -5,6 +5,7 @@ import com.cdxt.common.enums.MailType;
 import com.cdxt.common.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class SMSServiceImpl implements SMSService {

@@ -2,8 +2,6 @@ package com.cdxt.backend.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.cdxt.backend.model.IssuesOpLog;
 import com.cdxt.backend.pojo.dto.IssuesPostDTO;
 import com.cdxt.backend.pojo.dto.IssuesQueryDTO;
 import com.cdxt.backend.pojo.dto.IssuesUpdateDTO;
@@ -53,7 +51,7 @@ public class IssueController extends BaseController {
         return issuesService.releaseIssue(dto);
     }
     @ApiOperation("更新问题处理状态")
-    @PostMapping("/updateState")
+    @PutMapping("/updateState")
     public Boolean updateState(@RequestBody IssuesUpdateDTO dto){
         return issuesService.updateIssueState(dto,getUid());
     }
@@ -71,17 +69,6 @@ public class IssueController extends BaseController {
     }
 
 
-    @ApiOperation("获取所有问题操作历史日志记录")
-    @GetMapping("/history-log")
-    public ResponseListVO<IssuesOpLog> getIssueLogList(
-            @RequestParam(required = false,defaultValue = "1") Long pageNum,
-            @RequestParam(required = false,defaultValue = "10") Long pageSize
-    ){
-        IPage<IssuesOpLog> iPage =  issuesOpLogService.getHistoryIssuesOpLog(pageNum,pageSize);
-        ResponseListVO<IssuesOpLog> vo = new ResponseListVO<>(iPage.getCurrent(),iPage.getSize(),iPage.getTotal(),iPage.getRecords());
-        return vo;
-    }
-
 
 
     /**
@@ -90,10 +77,15 @@ public class IssueController extends BaseController {
      * @return
      */
     @ApiOperation("指派问题任务给用户")
-    @GetMapping("/assignUser")
+    @PutMapping("/assignUser")
     public Boolean assignUser(@RequestBody IssuesUpdateDTO dto){
         return issuesService.assignIssueDealUser(dto.getId(),dto.getDUid(),getUid(),dto.getFeedBackText());
     }
 
+    @ApiOperation("获取售后问题处理人员在线情况")
+    @GetMapping("/onlineUser/state")
+    public JSONObject getOnlineUserList(){
+      return   afterSafeIssueWebsocket.getConnection();
+    }
 
 }

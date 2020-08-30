@@ -11,6 +11,7 @@ public enum TaskStateEnum {
     RESOLVE ("处理完成","3");
 
 
+
     private String label;
     private String value;
     TaskStateEnum(String label, String value){

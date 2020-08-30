@@ -8,3 +8,22 @@ spring:
       profile: dev
       laber: master
       uri: http://39.106.183.121:9025/
+
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+
+mybatis-plus:
+  global-config:
+    db-config:
+      select-strategy: not_empty
+
+
+file:
+  upload:
+    path: D:\临时文件
+  download:
+    uri: 127.0.0.1/cdxt/

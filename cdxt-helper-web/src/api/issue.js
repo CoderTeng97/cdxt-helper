@@ -13,13 +13,26 @@ export function postIssue(data) {
 }
 
 /**
- * 更新问题任务
+ * 更新状态
  * @param {*} data 
  */
-export function updateIssue(data) {
+export function updateIssueState(data) {
     return request({
       url: '/after-safe/issue/updateState',
-      method: 'POST',
+      method: 'PUT',
+      data:data
+    })
+}
+
+
+/**
+ * 重新指派任务处理人
+ * @param {*} data 
+ */
+export function issueAssign(data) {
+    return request({
+      url: '/after-safe/issue/assignUser',
+      method: 'PUT',
       data:data
     })
 }
@@ -47,6 +60,16 @@ export function searchIssue(data){
 export function getWatcherList(){
     return request({
         url: '/user/watcher/list',
+        method: 'GET',
+    })
+}
+
+/**
+ * 获取值班人员在线状态信息
+ */
+export function getOnlineUserList(){
+    return request({
+        url: '/after-safe/issue/onlineUser/state',
         method: 'GET',
     })
 }

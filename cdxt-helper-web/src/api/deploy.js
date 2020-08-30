@@ -17,7 +17,7 @@ export function deployPost(data) {
  */
 export function getHospital(param) {
     return request({
-      url: '/deploy/hospitals',
+      url: '/common/hospitals',
       method: 'GET',
       params:param
     })

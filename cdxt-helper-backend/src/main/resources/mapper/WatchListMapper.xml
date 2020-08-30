@@ -19,7 +19,7 @@
 
 
     <sql id="View_Column_List">
-        wl.id, tu.true_name, wl.gmt_create, wl.gmt_end_time, wl.type,tu.module
+        wl.id,wl.uid as uid, tu.true_name, wl.gmt_create, wl.gmt_end_time, wl.type,tu.module
     </sql>
     <select id="selectViewByPage" resultType="com.cdxt.backend.pojo.vo.WatcherVO">
         select

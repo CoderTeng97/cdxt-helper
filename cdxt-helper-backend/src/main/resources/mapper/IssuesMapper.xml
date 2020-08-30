@@ -75,7 +75,6 @@
              LEFT JOIN tb_user pu ON pu.id = ti.p_uid
              LEFT JOIN tb_user vu ON vu.id = ti.v_uid
              LEFT JOIN tb_hospital h ON ti.hospital_id = h.id
-             LEFT JOIN tb_issues_op_log tiol ON tiol.isid = ti.id
              <where>
                     1 = 1
                  <if test="title!=null and title!=''">
@@ -142,11 +141,45 @@
              LEFT JOIN tb_user pu ON pu.id = ti.p_uid
              LEFT JOIN tb_user vu ON vu.id = ti.v_uid
              LEFT JOIN tb_hospital h ON ti.hospital_id = h.id
-             LEFT JOIN tb_issues_op_log tiol ON tiol.isid = ti.id
              <where>
-                is_del='0' and (d_uid = #{uid} or p_uid = #{uid} or v_uid = #{uid})
+                is_del='0' and ti.id=#{id}
              </where>
     </select>
+    <update id="updateByIdWithFieldsNotNull" parameterType="com.cdxt.backend.model.Issues">
+        UPDATE tb_issues
+        <trim prefix="set" suffixOverrides=",">
+            <if test="title!=null and title!=''">
+                  title #{title},
+            </if>
+
+            <if test="classification!=null and classification!=''">
+                  classification =#{classification},
+            </if>
+
+            <if test="priorityCode!=null and priorityCode!=''">
+                  priority_code =#{priorityCode}
+            </if>
+            <if test="state!=null and state!=''">
+                  state =#{state},
+            </if>
+            <if test="dUid!=null and dUid!=''">
+                 d_uid = #{dUid},
+            </if>
+            <if test="vUid!=null and vUid!=''">
+                 v_uid = #{vUid},
+            </if>
+            <if test="pUid!=null and pUid!=''">
+                 p_uid = #{pUid},
+            </if>
+            <if test="module!=null and module!=''">
+                  module =#{module},
+            </if>
+            <if test="isDel!=null and isDel!=''">
+                  is_del =#{isDel},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
 
 
 </mapper>

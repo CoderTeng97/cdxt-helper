@@ -35,4 +35,5 @@ public interface IssuesMapper extends BaseMapper<Issues> {
 
     Long selectPageByQueryDTOCount(IssuesQueryDTO dto);
 
+    Integer updateByIdWithFieldsNotNull(Issues issues);
 }

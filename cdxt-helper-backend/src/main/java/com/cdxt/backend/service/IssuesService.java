@@ -51,6 +51,12 @@ public interface IssuesService extends IService<Issues> {
      * @return
      */
     public IssuesDetailVO issueDetail(String issueId);
+
+    /** 根据id获取问题基本信息
+     * @param issueId
+     * @return
+     */
+    public IssuesViewVO getIssueBaseInfo(String issueId);
     /**
      * 指派用户处理问题
      * @param issueId 问题id

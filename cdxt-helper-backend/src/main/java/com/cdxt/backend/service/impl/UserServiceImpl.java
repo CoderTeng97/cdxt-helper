@@ -1,6 +1,7 @@
 package com.cdxt.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.cdxt.backend.dao.UserMapper;
 import com.cdxt.backend.model.User;
 import com.cdxt.backend.pojo.dto.UserLoginDTO;
@@ -13,7 +14,6 @@ import com.cdxt.common.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -59,8 +59,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<Map<String,Object>>  getUserList(String trueName,String role) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.eq(!StringUtils.isEmpty(role),"role",role.trim())
-                .like(!StringUtils.isEmpty(trueName),"true_name",trueName)
+        wrapper.eq(StringUtils.isNotEmpty(role),"role",role)
+                .likeLeft(StringUtils.isNotEmpty(trueName),"true_name",trueName)
                 .select("id","true_name");
        return  baseMapper.selectMaps(wrapper);
     }

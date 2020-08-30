@@ -14,6 +14,11 @@ public class WatcherVO {
      * 值班人员姓名
      */
     private String trueName;
+    
+    /**
+     * 值班人员用户id
+     */
+    private String uid;
 
     /**
      * 值班开始时间

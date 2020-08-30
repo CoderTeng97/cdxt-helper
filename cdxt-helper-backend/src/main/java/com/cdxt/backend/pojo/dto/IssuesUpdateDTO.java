@@ -1,5 +1,6 @@
 package com.cdxt.backend.pojo.dto;
 
+import com.cdxt.backend.enums.OperationTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -88,4 +89,5 @@ public class IssuesUpdateDTO implements Serializable {
 
     @ApiModelProperty(value = "反馈内容" ,required =  false)
     private String feedBackText;
+
 }
