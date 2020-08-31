@@ -16,6 +16,17 @@ export function getInfo(token) {
   })
 }
 
+export function resetPassword(oldPassword,newPassword) {
+  return request({
+    url: '/user/info',
+    method: 'get',
+    params: { 
+      oldPassword,
+      newPassword
+    }
+  })
+}
+
 export function logout() {
   return request({
     url: '/user/logout',

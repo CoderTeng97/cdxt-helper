@@ -29,17 +29,17 @@
     </div>
 
     <el-dialog title="密码修改" :visible.sync="userUpdateDialog" width="30%">
-      <el-form :model="userUpdateForm" >
-        <el-form-item label="旧密码" :label-width="formLabelWidth">
-          <el-input placeholder="请输入密码" v-model="oldPassword" show-password></el-input>
+      <el-form :model="userUpdatePwdForm" >
+        <el-form-item label="旧密码" >
+          <el-input placeholder="请输入密码" v-model="userUpdatePwdForm.oldPassword" show-password></el-input>
         </el-form-item>
-        <el-form-item label="新密码" :label-width="formLabelWidth">
-          <el-input placeholder="请输入密码" v-model="newPassword" show-password></el-input>
+        <el-form-item label="新密码" >
+          <el-input placeholder="请输入密码" v-model="userUpdatePwdForm.newPassword" show-password></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="userUpdateDialog = false">取 消</el-button>
-        <el-button type="primary" @click="userUpdateDialog = false">确认修改</el-button>
+        <el-button @click.native="userUpdateDialog = false">取 消</el-button>
+        <el-button type="primary" @click="resetPassword()">确认修改</el-button>
       </div>
     </el-dialog>
   </div>
@@ -48,6 +48,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { resetRouter } from "@/router";
+import {resetPassword} from "@/api/user"
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 
@@ -62,7 +63,10 @@ export default {
   data() {
     return {
       userUpdateDialog: false,
-      userUpdateForm:{}
+      userUpdatePwdForm:{
+        oldPassword:'',
+        newPassword:''
+      }
     };
   },
   methods: {
@@ -73,6 +77,18 @@ export default {
       await this.$store.dispatch("user/logout");
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
+    async resetPassword(){
+      let res = await resetPassword(this.userUpdatePwdForm);
+      if(res){
+        this.$message({
+          message: "修改成功！",
+          type: "success",
+        });
+        this.userUpdatePwdForm.oldPassword = ''
+        this.userUpdatePwdForm.newPassword = ''
+      }
+      this.userUpdateDialog = false;
+    }
   },
   destroyed() {
     resetRouter(); //退出系统，重置路由

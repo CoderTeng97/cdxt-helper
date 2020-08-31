@@ -49,7 +49,7 @@ public class UserController extends BaseController {
      */
     @PutMapping("/register")
     public Boolean register(@RequestBody User user) {
-        UserBaseVO userBaseVO = getUserInfo();
+//        UserBaseVO userBaseVO = getUserInfo();
 //        if (!UserRole.ADMIN.equals(UserRole.valueOf(userBaseVO.getRole()))){
 //            throw new ResponseCommonException(HttpStatus.BAD_REQUEST,"您不是管理员，不具备注册权限");
 //        }

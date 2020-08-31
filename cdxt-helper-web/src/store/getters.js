@@ -13,7 +13,7 @@ const getters = {
   },
   role: state => {
     if(state.user.role) {
-      return state.user.name
+      return state.user.role
     }
     return window.localStorage.getItem("role")
   },

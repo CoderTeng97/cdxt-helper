@@ -32,6 +32,10 @@ public class User implements Serializable {
      * 用户名
      */
     private String username;
+    /**
+     * 真实姓名
+     */
+    private String trueName;
 
     /**
      * 密码
@@ -59,7 +63,7 @@ public class User implements Serializable {
     private LocalDateTime gmtModified;
 
     /**
-     * 复制模块
+     * 负责模块
      */
     private String module;
 

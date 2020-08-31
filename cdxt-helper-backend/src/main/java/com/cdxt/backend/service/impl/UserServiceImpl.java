@@ -33,8 +33,7 @@ import java.util.Map;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Value("${pwd.secret}")
-    private String secret;
+
     @Autowired
     IdWorker idWorker;
     @Autowired
@@ -52,7 +51,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw  new ResponseCommonException(HttpStatus.BAD_REQUEST,"用户名已存在,请换一个用户名称");
         }
        user.setId(idWorker.nextId() + "");
-       user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()+ secret));
+       user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()));
        return this.save(user);
     }
 
@@ -62,12 +61,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userBaseVO == null){
            throw  new ResponseCommonException(HttpStatus.NOT_FOUND,"用户不存在");
         }
-
-//        String hashPass = bcryptPasswordEncoder.encode(userLoginDTO.getPassword() + secret);
-//        boolean isMatche = bcryptPasswordEncoder.matches(userBaseVO.getPassword(),hashPass);
-//        if (false == isMatche){
-//            throw  new ResponseCommonException(HttpStatus.NOT_FOUND,"用户或密码不正确");
-//        }
+        boolean isMatche = bcryptPasswordEncoder.matches(userLoginDTO.getPassword(),userBaseVO.getPassword());
+        if (false == isMatche){
+            throw  new ResponseCommonException(HttpStatus.NOT_FOUND,"用户或密码不正确");
+        }
         userBaseVO.setPassword(null);
         Map<String, Object> claims = new HashMap<>();
         claims.put("uid", userBaseVO.getId());
@@ -110,7 +107,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw  new ResponseCommonException(HttpStatus.BAD_REQUEST,"旧密码错误,请确认后重试");
         }
         User user = new User();
-        user.setPassword(newPassword + secret);
+        user.setPassword(newPassword);
         user.setId(uid);
         return  this.updateById(user);
     }
@@ -123,8 +120,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     Boolean verifyUserPassword(String uid,String password){
         String dbPassword =  baseMapper.selectPasswordById(uid);
-        String hashPass = bcryptPasswordEncoder.encode(dbPassword + secret);
-        boolean isMatche = bcryptPasswordEncoder.matches(password,hashPass);
+        boolean isMatche = bcryptPasswordEncoder.matches(password,dbPassword);
        return  isMatche;
     }
 }
