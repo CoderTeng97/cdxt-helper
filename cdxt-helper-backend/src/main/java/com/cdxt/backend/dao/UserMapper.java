@@ -34,4 +34,16 @@ public interface UserMapper extends BaseMapper<User> {
     */
    @Select("select true_name from  tb_user where id=#{id}")
    String selectTrueNameById(@Param("id") String id);
+
+   /**
+    * 查询密码
+    * @param id
+    * @return
+    */
+   @Select("select password from  tb_user where id=#{id}")
+   String selectPasswordById(@Param("id") String id);
+
+
+   @Select("select password from  tb_user where username=#{username}")
+   String selectPasswordByUsername(@Param("username") String username);
 }

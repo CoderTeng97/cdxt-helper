@@ -12,7 +12,9 @@ import com.cdxt.backend.service.IssuesService;
 import com.cdxt.backend.websockt.AfterSafeIssueWebsocket;
 import com.cdxt.common.annotation.ControllerResponseProcessor;
 import com.cdxt.common.base.BaseController;
+import com.cdxt.common.enums.UserRole;
 import com.cdxt.common.pojo.vo.ResponseListVO;
+import com.cdxt.common.pojo.vo.UserBaseVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +61,10 @@ public class IssueController extends BaseController {
     @ApiOperation("查询问题列表")
     @PostMapping("/list")
     public ResponseListVO<IssuesViewVO> searchIssueList(@RequestBody  IssuesQueryDTO dto){
+        UserBaseVO userBaseVO = getUserInfo();
+        if (!UserRole.ADMIN.equals(UserRole.valueOf(userBaseVO.getRole().toUpperCase()))) {
+            dto.setUid(userBaseVO.getId());
+        }
         return issuesService.searchIssueList(dto);
     }
 

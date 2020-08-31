@@ -1,6 +1,7 @@
 package com.cdxt.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.cdxt.backend.dao.UserMapper;
 import com.cdxt.backend.model.User;
@@ -12,7 +13,9 @@ import com.cdxt.common.pojo.vo.UserBaseVO;
 import com.cdxt.common.utils.IdWorker;
 import com.cdxt.common.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,15 +33,26 @@ import java.util.Map;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Value("${pwd.secret}")
+    private String secret;
     @Autowired
     IdWorker idWorker;
-
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    BCryptPasswordEncoder bcryptPasswordEncoder;
 
     @Override
     public Boolean increaseUser(User user) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",user.getUsername());
+        int count = baseMapper.selectCount(queryWrapper);
+
+        if (count > 0){
+            throw  new ResponseCommonException(HttpStatus.BAD_REQUEST,"用户名已存在,请换一个用户名称");
+        }
        user.setId(idWorker.nextId() + "");
+       user.setPassword(bcryptPasswordEncoder.encode(user.getPassword()+ secret));
        return this.save(user);
     }
 
@@ -48,6 +62,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userBaseVO == null){
            throw  new ResponseCommonException(HttpStatus.NOT_FOUND,"用户不存在");
         }
+
+//        String hashPass = bcryptPasswordEncoder.encode(userLoginDTO.getPassword() + secret);
+//        boolean isMatche = bcryptPasswordEncoder.matches(userBaseVO.getPassword(),hashPass);
+//        if (false == isMatche){
+//            throw  new ResponseCommonException(HttpStatus.NOT_FOUND,"用户或密码不正确");
+//        }
+        userBaseVO.setPassword(null);
         Map<String, Object> claims = new HashMap<>();
         claims.put("uid", userBaseVO.getId());
         claims.put("username", userBaseVO.getUsername());
@@ -81,5 +102,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.eq("id",uid);
         Integer count = baseMapper.selectCount(queryWrapper);
         return count > 0 ?true : false;
+    }
+
+    @Override
+    public Boolean resetPassword(String oldPassword, String newPassword, String uid) {
+        if (false == verifyUserPassword(uid,oldPassword)){
+            throw  new ResponseCommonException(HttpStatus.BAD_REQUEST,"旧密码错误,请确认后重试");
+        }
+        User user = new User();
+        user.setPassword(newPassword + secret);
+        user.setId(uid);
+        return  this.updateById(user);
+    }
+
+    /**
+     * 校验用户密码 一般用于登录后进行重要操作验证
+     * @param uid
+     * @param password
+     * @return
+     */
+    Boolean verifyUserPassword(String uid,String password){
+        String dbPassword =  baseMapper.selectPasswordById(uid);
+        String hashPass = bcryptPasswordEncoder.encode(dbPassword + secret);
+        boolean isMatche = bcryptPasswordEncoder.matches(password,hashPass);
+       return  isMatche;
     }
 }

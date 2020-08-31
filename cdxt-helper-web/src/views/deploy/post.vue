@@ -146,7 +146,7 @@ export default {
      */
     async initPage(){
       //获取部署人员列表
-      this.deployerList = await getUserList('deployer','')
+      this.deployerList = await getUserList('DEPLOYER','')
       console.log(this.deployerList)
     },
     //提交的时候

@@ -176,6 +176,7 @@ $light_gray:#fff;
   overflow: hidden;
 
   .login-form {
+    border-radius: 5px;
     position: relative;
     width: 520px;
     max-width: 100%;

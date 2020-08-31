@@ -58,5 +58,10 @@ public class User implements Serializable {
      */
     private LocalDateTime gmtModified;
 
+    /**
+     * 复制模块
+     */
+    private String module;
+
 
 }

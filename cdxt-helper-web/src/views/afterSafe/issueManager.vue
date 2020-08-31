@@ -13,12 +13,12 @@
             </el-row>
           </div>
           <div class="box-main">
-            <el-row>
-              <el-col v-for="item in logList" :key="item" :span="24" class="content">
-                <span
-                  v-if="item.type=='ISSUE_OP_LOG'"
-                >{{ $moment(item.data.gmtCreate).format("HH:MM:SS") +' ' + item.data.content}}</span>
-                <span v-if="item.type=='LOG'">{{item.gmt_create +' ' + item.message}}</span>
+            <el-row style="overflow-y:scroll; height:250px;">
+              <el-col v-for="item in logList" :key="item" :span="24" class="content" >
+                  <span
+                    v-if="item.type=='ISSUE_OP_LOG'"
+                  >{{ $moment(item.data.gmtCreate).format("HH:MM:SS") +' ' + item.data.content}}</span>
+                  <span v-if="item.type=='LOG'">{{item.gmt_create +' ' + item.message}}</span>
               </el-col>
             </el-row>
           </div>
@@ -36,7 +36,7 @@
                   class="el-icon-setting"
                   @click="watcherSetDialogVisible = true"
                   style=" cursor: pointer;font-size: 18px;color: #2196F3;margin-left: 10px;"
-                  v-if="role == 'admin'"
+                  v-if="role == 'ADMIN'"
                 ></i>
               </el-col>
               <el-col :span="10"></el-col>
@@ -48,10 +48,11 @@
               class="watcher-table"
               style="width: 100% ;height:250px;overflow:scroll;"
             >
-              <el-table-column prop="trueName" label="姓名"></el-table-column>
-              <el-table-column prop="module" label="负责模块" :formatter="moduleFormat"></el-table-column>
-              <el-table-column prop="gmtEndTime" label="值班结束时间"></el-table-column>
-              <el-table-column label="上线状态">{{onlieState == 1 ? '离线':'在线' }}</el-table-column>
+              <el-table-column prop="trueName" label="姓名" width="100"></el-table-column>
+              <el-table-column prop="module" label="负责模块" width="100" :formatter="moduleFormat"></el-table-column>
+              <el-table-column  label="值班结束时间">{{$moment(gmtEndTime).format("YYY-MM-DD HH:MM:SS")}}</el-table-column>
+              <el-table-column label="进行中的任务数" prop="processingTaskNum"></el-table-column>
+              <!-- <el-table-column label="状态" width="100" prop="isOnline">{{isOnline==true? '在线':'离线'}}</el-table-column> -->
             </el-table>
           </div>
         </div>
@@ -104,7 +105,7 @@
                     effect="dark"
                     content="开始"
                     placement="top-start"
-                    v-if="issueTable.records[scope.$index].state==0 && role == 'developer' "
+                    v-if="issueTable.records[scope.$index].state==0 && role == 'DEVELOPER' "
                   >
                     <i
                       class="iconfont icon-xiaoyan"
@@ -116,7 +117,7 @@
                     effect="dark"
                     content="指派"
                     placement="top-start"
-                    v-if="role == 'developer' && (issueTable.records[scope.$index].state==0 || issueTable.records[scope.$index].state==1)"
+                    v-if="role == 'DEVELOPER' && (issueTable.records[scope.$index].state==0 || issueTable.records[scope.$index].state==1)"
                   >
                     <i
                       class="iconfont icon-zhipai"
@@ -129,7 +130,7 @@
                     effect="dark"
                     content="完成"
                     placement="top-start"
-                    v-if="issueTable.records[scope.$index].state==1&& role == 'developer'"
+                    v-if="issueTable.records[scope.$index].state==1&& role == 'DEVELOPER'"
                   >
                     <i
                       class="iconfont icon-wancheng5"
@@ -149,7 +150,7 @@
                     effect="dark"
                     content="审核"
                     placement="top-start"
-                    v-if="issueTable.records[scope.$index].state == 2 && role == 'after-safe'"
+                    v-if="issueTable.records[scope.$index].state == 2 && role == 'AFTERSAFE'"
                   >
                     <i
                       class="iconfont icon-xiaoyanbaocun"
@@ -218,7 +219,7 @@
           </el-col>
           <el-col :span="3">
             <el-form-item prop="duid">
-              <UserSearchSelect :role="developer" v-model="issuePostForm.duid"></UserSearchSelect>
+              <UserSearchSelect :role="DEVELOPER" v-model="issuePostForm.duid"></UserSearchSelect>
             </el-form-item>
           </el-col>
 
@@ -249,7 +250,7 @@
         <el-row gutter="10">
           <el-col :span="15" v-if="issueDialogConfig.name=='issueAssignUser'">
             <el-form-item>
-              <UserSearchSelect :role="developer" v-model="issueUpdateForm.duid"></UserSearchSelect>
+              <UserSearchSelect :role="DEVELOPER" v-model="issueUpdateForm.duid"></UserSearchSelect>
             </el-form-item>
           </el-col>
 
@@ -317,14 +318,24 @@
     </el-dialog>
 
     <!-- 值班人员设置弹窗 -->
-    <el-dialog title="值班人员设置" :visible.sync="watcherSetDialogVisible" width="40%" >
-      <el-form :inline="true" :model="watcherSetForm" class="demo-form-inline"  :rules="watcherSetFormRules"
-        ref="watcherSetForm">
+    <el-dialog title="值班人员设置" :visible.sync="watcherSetDialogVisible" width="40%">
+      <el-form
+        :inline="true"
+        :model="watcherSetForm"
+        class="demo-form-inline"
+        :rules="watcherSetFormRules"
+        ref="watcherSetForm"
+      >
         <el-form-item label="用户" prop="uid">
-          <UserSearchSelect :role="developer" v-model="watcherSetForm.uid"></UserSearchSelect>
+          <UserSearchSelect :role="DEVELOPER" v-model="watcherSetForm.uid"></UserSearchSelect>
         </el-form-item>
         <el-form-item label="值班结束时间" prop="gmtEndTime">
-          <el-date-picker v-model="watcherSetForm.gmtEndTime" type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          <el-date-picker
+            v-model="watcherSetForm.gmtEndTime"
+            type="datetime"
+            placeholder="选择日期时间"
+            value-format="yyyy-MM-dd HH:mm:ss"
+          ></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -348,37 +359,37 @@ import {
   issueAssign,
   updateIssueState,
   getOnlineUserList,
-  getIssueDetail
+  getIssueDetail,
 } from "@/api/issue";
 import { getHospital } from "../../api/deploy";
-import {setWatcher} from "@/api/user"
+import { setWatcher } from "@/api/user";
 import UserSearchSelect from "@/components/Common/UserSearchSelect";
 import HospitalSearchSelect from "@/components/Common/HospitalSearchSelect";
 import { quillRedefine } from "vue-quill-editor-upload";
 import { mapGetters } from "vuex";
-import { formatTime } from '../../utils';
+import { formatTime } from "../../utils";
 
 const issueDialogConfigs = {
   issuePost: {
     width: "80%",
-    title: "问题发布"
+    title: "问题发布",
   },
   issueAdditional: {
     width: "80%",
-    title: "问题补录"
+    title: "问题补录",
   },
   issueAssignUser: {
     width: "50%",
-    title: "问题指派"
+    title: "问题指派",
   },
   issueCompletion: {
     width: "50%",
-    title: "问题完成确认"
+    title: "问题完成确认",
   },
   issueAuth: {
     width: "50%",
-    title: "问题审核"
-  }
+    title: "问题审核",
+  },
 };
 export default {
   name: "issueManager",
@@ -386,7 +397,7 @@ export default {
     //使用编辑器
     quillEditor,
     UserSearchSelect,
-    HospitalSearchSelect
+    HospitalSearchSelect,
   },
   data() {
     return {
@@ -400,12 +411,12 @@ export default {
       issueDetail: {}, //问题详情
       watcherSetForm: {
         uid: "",
-        gmtEndTime: null
+        gmtEndTime: null,
       },
       issueUpdateForm: {
         title: "",
         duid: "",
-        feedBackText: ""
+        feedBackText: "",
       }, //问题更新表单
       issuePostForm: {
         title: "",
@@ -413,7 +424,7 @@ export default {
         module: "",
         hospitalId: "",
         detail: "",
-        priorityCode: ""
+        priorityCode: "",
       }, //问题发布表单对象
       issuePostIsAddtional: false,
       hospitalSelectLoading: false, //医院搜索加载
@@ -423,35 +434,45 @@ export default {
       issuePostFormRules: {
         title: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
         hospitalId: [
-          { required: true, message: "请输入医院名称", trigger: "change" }
+          { required: true, message: "请输入医院名称", trigger: "change" },
         ],
         priorityCode: [
-          { required: true, message: "请选择优先级代码", trigger: "change" }
+          { required: true, message: "请选择优先级代码", trigger: "change" },
         ],
         module: [
-          { required: true, message: "请选择问题模块", trigger: "change" }
+          { required: true, message: "请选择问题模块", trigger: "change" },
         ],
-        duid: [{ required: true, message: "请选择处理人员", trigger: "change" }]
+        duid: [
+          { required: true, message: "请选择处理人员", trigger: "change" },
+        ],
       },
-      watcherSetFormRules:{
-         uid: [{ required: true, message: "值班人员不能为空", trigger: "change" }],
-         gmtEndTime: [{ required: true, message: "值班结束时间不能为空", trigger: "change" }],
+      watcherSetFormRules: {
+        uid: [
+          { required: true, message: "值班人员不能为空", trigger: "change" },
+        ],
+        gmtEndTime: [
+          {
+            required: true,
+            message: "值班结束时间不能为空",
+            trigger: "change",
+          },
+        ],
       },
       issueSearchParams: {
         // 问题列表查询参数
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
       },
       issueTable: {
         //问题列表参数
         pageNum: 1,
         pageSize: 10,
         total: 0,
-        records: []
+        records: [],
       }, // 问题列表
       issueDialogConfig: {}, //弹窗配置
 
-      editorOption: {}
+      editorOption: {},
     };
   },
   methods: {
@@ -516,7 +537,7 @@ export default {
      */
     initWebSocket() {
       //初始化weosocket
-      const wsuri = "ws://127.0.0.1:9028/wss/afs/issue/" + this.uid;
+      const wsuri = "ws://10.158.3.147:9028/wss/afs/issue/" + this.uid;
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onopen = this.websocketonopen;
@@ -558,17 +579,22 @@ export default {
       console.log(data);
       this.logList.push(data);
       this.searchIssue((this.issueSearchParams = {}));
+      this.getWatcherList();
     },
     /**
      * wss提示处理
      */
     logHandler(data) {
+     
       let message = {
         message: data,
         type: "LOG",
-        gmt_create: this.$moment(new Date()).format("HH:MM:SS")
+        gmt_create: this.$moment(new Date()).format("HH:MM:SS"),
       };
       this.logList.push(message);
+       //日志提示时，更新问题处理人员列表数据
+      this.refreshWatherOnlieState();
+
     },
     /**
      * wss 操作分发器 将不同类型的数据发送到不同的方法处理
@@ -591,7 +617,7 @@ export default {
      */
     commonSubmit(formName) {
       let isSubmit = false;
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           switch (formName) {
             case "issuePostForm":
@@ -618,6 +644,7 @@ export default {
       this.issuePostForm.hospitalId = "";
       this.issueUpdateForm.duid = "";
       this.issueUpdateForm.feedBackText = "";
+      this.watcherSetForm.uid = "";
     },
     /**
      * 发布问题
@@ -630,7 +657,7 @@ export default {
         this.commonDialogVisible = false;
         this.$message({
           message: "上传成功！",
-          type: "success"
+          type: "success",
         });
       }
       return res;
@@ -641,7 +668,7 @@ export default {
         this.commonDialogVisible = false;
         this.$message({
           message: "更新成功！",
-          type: "success"
+          type: "success",
         });
       }
     },
@@ -673,7 +700,7 @@ export default {
         let res = await getHospital({
           text: query,
           pageNum: 1,
-          pageSize: 1000
+          pageSize: 1000,
         });
         this.hospitalList = res.records;
         this.hospitalSelectLoading = false;
@@ -686,7 +713,7 @@ export default {
      */
     hospitalSelectChangeEvt() {
       this.tempForm.hospital = this.hospitals.filter(
-        item => item.id == this.tempForm.hospital.id
+        (item) => item.id == this.tempForm.hospital.id
       )[0];
       this.showDUserSelect = true;
     },
@@ -713,7 +740,7 @@ export default {
       if (res) {
         this.$message({
           message: "设置成功！",
-          type: "success"
+          type: "success",
         });
       }
       return res;
@@ -766,7 +793,7 @@ export default {
         if (res) {
           this.$message({
             message: "操作成功",
-            type: "success"
+            type: "success",
           });
           this.resetForm("issueUpdateForm");
           this.commonDialogVisible = false;
@@ -774,7 +801,7 @@ export default {
       } else {
         this.$message({
           message: "任务状态不能为空",
-          type: "error"
+          type: "error",
         });
       }
     },
@@ -788,7 +815,7 @@ export default {
       ) {
         this.$message({
           message: "任务处理人员信息不能为空",
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -797,7 +824,7 @@ export default {
       if (res) {
         this.$message({
           message: "任务指派成功",
-          type: "success"
+          type: "success",
         });
         this.resetForm("issueUpdateForm");
         this.commonDialogVisible = false;
@@ -806,37 +833,39 @@ export default {
     async refreshWatherOnlieState() {
       let res = await getOnlineUserList();
       this.watcehrOnlieInfo = res;
-      for (i = 0, len = arr.length; i < len; i++) {
-        for (var onlieUid of this.watcehrOnlieInfo.onlieUserList) {
+      this.watcherList.forEach((item,index,arr) =>{
+          for (var onlineUid of this.watcehrOnlieInfo.onlieUserList) {
           //是否在线判断
-          let onlieState = arr[i].uid == onlieUid ? 1 : 0;
-          arr[i].onlieState = onlieState;
-        }
-      }
-    }
+          let isOnline = item.uid == onlineUid ? true : false;
+          this.watcherList[index].isOnline = isOnline;
+           }
+      });
+      console.log(this.watcherList)
+    },
   },
 
   mounted() {
-    //初始化websocket服务
-    this.initWebSocket();
+
     //初始化字典
     this.moduleList = [
       { label: "住院", value: "1" },
       { label: "护士", value: "2" },
       { label: "药品", value: "3" },
-      { label: "门诊", value: "4" }
+      { label: "门诊", value: "4" },
     ];
     this.priorityCodeList = [
       { label: "低", value: "1" },
       { label: "中", value: "2" },
       { label: "高", value: "3" },
-      { label: "紧急", value: "4" }
+      { label: "紧急", value: "4" },
     ];
     //初始化表格
     this.searchIssue((this.issueSearchParams = {}));
     this.getWatcherList();
     //初始化值班状态
     this.refreshWatherOnlieState();
+    //初始化websocket服务
+    this.initWebSocket();
     //
     this.editorOption = quillRedefine({
       // 图片上传的设置
@@ -845,7 +874,7 @@ export default {
         // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
         // 你必须把返回的数据中所包含的图片地址 return 回去
         name: "file",
-        res: respnse => {
+        res: (respnse) => {
           console.log(respnse);
           //  var w=respnse.msg.img.path.indexOf('upload');
 
@@ -853,21 +882,22 @@ export default {
 
           // 这里切记要return回你的图片地址
           return "http://39.106.183.121/svn/1002.jpg";
-        }
+        },
       },
-      theme: "snow" //这个是组题
+      theme: "snow", //这个是组题
     });
+    
   },
   computed: {
     ...mapGetters({
       uid: "uid",
       username: "name",
-      role: "role"
-    })
+      role: "role",
+    }),
   },
   destroyed() {
     this.websock.close(); //离开路由之后断开websocket连接
-  }
+  },
 };
 </script>
 

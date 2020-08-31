@@ -11,6 +11,9 @@ public class UserBaseVO {
     private String role;
     private String token;
 
+    @JsonIgnore
+    private String password;
+
     public String getId() {
         return id;
     }
@@ -41,5 +44,13 @@ public class UserBaseVO {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -56,5 +56,7 @@ public interface UserService extends IService<User> {
      */
     Boolean isExistUser(String uid);
 
+    Boolean resetPassword(String oldPassword,String newPassword,String uid);
+
 
 }

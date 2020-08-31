@@ -63,7 +63,7 @@ export const commonRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/post.vue'),
-        meta: { title: '补丁发布', icon: 'form',   },
+        meta: { title: '补丁发布', icon: 'example',   },
         roles: ['admin', "developer"]
       }
     ]
@@ -77,7 +77,7 @@ export const commonRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/list.vue'),
-        meta: { title: '补丁列表', icon: 'table',  },
+        meta: { title: '补丁列表', icon: 'liebiao',  },
         roles: ['admin','developer','deployer']
       }
     ]
@@ -91,7 +91,7 @@ export const commonRoutes = [
         path: 'index',
         name: 'Form',
         component: () => import('../views/deploy/branchManager.vue'),
-        meta: { title: '医院分支管理', icon: 'table', },
+        meta: { title: '医院分支管理', icon: 'ziyuan', },
         roles: ['admin',"developer",'deployer']
       }
     ]
@@ -100,13 +100,13 @@ export const commonRoutes = [
   {
     path: '/aftersales',
     component: Layout,
-    meta: { title: '运维管理', icon: 'table' },
+    meta: { title: '运维管理', icon: 'shouhoufuwu-' },
     children: [
       {
         path: '/problemPost',
         name: 'Form',
         component: () => import('../views/afterSafe/issueManager.vue'),
-        meta: { title: '售后问题管理', icon: 'table',  },
+        meta: { title: '售后问题管理', icon: 'dabianyanjiuwenti ',  },
         roles: ['admin', 'developer','aftersafo']
       }
     ]

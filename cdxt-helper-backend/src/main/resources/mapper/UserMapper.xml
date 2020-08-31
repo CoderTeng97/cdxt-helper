@@ -21,7 +21,6 @@
         from tb_user
         where
         username=#{account,jdbcType=VARCHAR}
-        and password=#{password,jdbcType=VARCHAR}
     </select>
 
 </mapper>

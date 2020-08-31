@@ -21,6 +21,11 @@ public class WatcherVO {
     private String uid;
 
     /**
+     * 正处理的任务数
+     */
+    private Integer processingTaskNum = 0;
+
+    /**
      * 值班开始时间
      */
     private LocalDateTime gmtCreate;
@@ -29,6 +34,8 @@ public class WatcherVO {
      * 值班结束时间
      */
     private LocalDateTime gmtEndTime;
+
+    private Boolean  isOnline = false;
 
     /**
      * 值班类型

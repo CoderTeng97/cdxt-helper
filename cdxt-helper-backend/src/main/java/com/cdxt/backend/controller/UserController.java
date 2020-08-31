@@ -9,10 +9,13 @@ import com.cdxt.backend.service.UserService;
 import com.cdxt.backend.service.WatchListService;
 import com.cdxt.common.annotation.ControllerResponseProcessor;
 import com.cdxt.common.base.BaseController;
+import com.cdxt.common.enums.UserRole;
+import com.cdxt.common.exception.ResponseCommonException;
 import com.cdxt.common.pojo.vo.ResponseListVO;
 import com.cdxt.common.pojo.vo.UserBaseVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -46,6 +49,10 @@ public class UserController extends BaseController {
      */
     @PutMapping("/register")
     public Boolean register(@RequestBody User user) {
+        UserBaseVO userBaseVO = getUserInfo();
+//        if (!UserRole.ADMIN.equals(UserRole.valueOf(userBaseVO.getRole()))){
+//            throw new ResponseCommonException(HttpStatus.BAD_REQUEST,"您不是管理员，不具备注册权限");
+//        }
         return userService.increaseUser(user);
     }
 
@@ -84,4 +91,12 @@ public class UserController extends BaseController {
         return watchListService.setWather(uid,gmtEndTime,type);
     }
 
+    /**
+     * 重置密码
+     * @return
+     */
+    @PutMapping
+    public Boolean resetPassword(@RequestParam  String oldPassword,@RequestParam String newPassword){
+        return userService.resetPassword(oldPassword,newPassword,getUid());
+    }
 }

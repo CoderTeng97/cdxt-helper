@@ -19,13 +19,17 @@
 
 
     <sql id="View_Column_List">
-        wl.id,wl.uid as uid, tu.true_name, wl.gmt_create, wl.gmt_end_time, wl.type,tu.module
+        wl.id,wl.uid as uid, tu.true_name, wl.gmt_create, wl.gmt_end_time, wl.type,tu.module,
+        ti.processing_task_num
+
     </sql>
     <select id="selectViewByPage" resultType="com.cdxt.backend.pojo.vo.WatcherVO">
         select
         <include refid="View_Column_List"/>
         from tb_watch_list wl
         left join  tb_user tu on tu.id = wl.uid
+        left join  (SELECT d_uid,COUNT(1) AS processing_task_num  FROM tb_issues  WHERE state IN ('0','1') GROUP BY d_uid) ti
+        ON ti.d_uid = wl.uid
         where wl.gmt_end_time  > now()
     </select>
 
