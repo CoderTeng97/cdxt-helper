@@ -1,9 +1,13 @@
 package com.cdxt.backend.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cdxt.backend.model.WatchList;
 import com.cdxt.backend.pojo.dto.UserLoginDTO;
 import com.cdxt.backend.model.User;
+import com.cdxt.backend.pojo.vo.DeployViewVO;
+import com.cdxt.backend.pojo.vo.UserViewVO;
 import com.cdxt.backend.pojo.vo.WatcherVO;
 import com.cdxt.backend.service.UserService;
 import com.cdxt.backend.service.WatchListService;
@@ -13,9 +17,11 @@ import com.cdxt.common.enums.UserRole;
 import com.cdxt.common.exception.ResponseCommonException;
 import com.cdxt.common.pojo.vo.ResponseListVO;
 import com.cdxt.common.pojo.vo.UserBaseVO;
+import com.cdxt.common.utils.IdWorker;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -30,7 +36,8 @@ public class UserController extends BaseController {
     UserService userService;
     @Autowired
     WatchListService watchListService;
-
+    @Autowired
+    IdWorker idWorker;
 
     /**
      * 用户登录
@@ -49,10 +56,10 @@ public class UserController extends BaseController {
      */
     @PutMapping("/register")
     public Boolean register(@RequestBody User user) {
-//        UserBaseVO userBaseVO = getUserInfo();
-//        if (!UserRole.ADMIN.equals(UserRole.valueOf(userBaseVO.getRole()))){
-//            throw new ResponseCommonException(HttpStatus.BAD_REQUEST,"您不是管理员，不具备注册权限");
-//        }
+        UserBaseVO userBaseVO = getUserInfo();
+        if (!UserRole.ADMIN.equals(UserRole.valueOf(userBaseVO.getRole()))){
+            throw new ResponseCommonException(HttpStatus.BAD_REQUEST,"您不是管理员，不具备注册权限");
+        }
         return userService.increaseUser(user);
     }
 
@@ -72,6 +79,31 @@ public class UserController extends BaseController {
     ){
         return  userService.getUserList(text,role);
     }
+
+
+    /**
+     * 获取用户列表
+     * @param pageNum
+     * @param pageSize
+     * @param trueName
+     * @return
+     */
+    @ApiOperation("获取或搜索用户分页列表")
+    @GetMapping("/page")
+    public ResponseListVO<UserViewVO> getUserPageList(
+            @RequestParam(required = false,defaultValue = "1")
+                    Integer pageNum,
+            @RequestParam(required = false,defaultValue = "10")
+                    Integer pageSize,
+            @RequestParam(required = false)
+                    String trueName
+    ){
+        IPage<UserViewVO> iPage = userService.getUserPageInfo(pageNum,pageSize,trueName);
+        ResponseListVO<UserViewVO> vo = new ResponseListVO<>(iPage.getCurrent(),iPage.getSize(),iPage.getTotal(),iPage.getRecords());
+        return vo;
+    }
+
+
 
     @ApiOperation("获取值班人员列表")
     @GetMapping("/watcher/list")
@@ -95,8 +127,13 @@ public class UserController extends BaseController {
      * 重置密码
      * @return
      */
-    @PutMapping
-    public Boolean resetPassword(@RequestParam  String oldPassword,@RequestParam String newPassword){
+    @PutMapping("/resetPassword")
+    public Boolean resetPassword(Map<String,String> req){
+        String oldPassword = req.get("oldPassword");
+        String newPassword = req.get("newPassword");
+        if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(oldPassword) ){
+            throw  new ResponseCommonException(HttpStatus.BAD_REQUEST,"密码不能为空");
+        }
         return userService.resetPassword(oldPassword,newPassword,getUid());
     }
 }

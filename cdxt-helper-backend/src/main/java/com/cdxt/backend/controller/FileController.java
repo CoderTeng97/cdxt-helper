@@ -1,5 +1,7 @@
 package com.cdxt.backend.controller;
 
+import com.cdxt.common.annotation.ControllerResponseProcessor;
+import com.cdxt.common.base.BaseController;
 import com.cdxt.common.exception.ResponseCommonException;
 import com.cdxt.common.pojo.vo.UploadFileResponseVO;
 import com.cdxt.common.utils.IdWorker;
@@ -26,7 +28,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/file")
-public class FileController {
+@ControllerResponseProcessor
+public class FileController extends BaseController {
 
     @Value("${file.upload.path}")
     private  String fileUploadUri;

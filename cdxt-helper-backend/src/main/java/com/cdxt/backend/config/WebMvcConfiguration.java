@@ -38,6 +38,7 @@ public class WebMvcConfiguration extends WebSecurityConfigurerAdapter {
         // 放行swagger 和静态资源
 
         web.ignoring().antMatchers("/swagger-ui.html",
+                "/",
                 "/v2/api-docs",
                 "/configuration/**",
                 "/swagger*/**",
@@ -53,7 +54,8 @@ public class WebMvcConfiguration extends WebSecurityConfigurerAdapter {
                 "/user/registry",
                 "/wss/**",
                 "/file/upload",
-                "/user/register"
+                "/user/register",
+                "/login"
         );
 
         web.ignoring().antMatchers(HttpMethod.GET,

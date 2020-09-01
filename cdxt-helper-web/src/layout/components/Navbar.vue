@@ -28,7 +28,7 @@
       </el-dropdown>
     </div>
 
-    <el-dialog title="密码修改" :visible.sync="userUpdateDialog" width="30%">
+    <el-dialog title="密码修改" :visible.sync="userUpdateDialog" width="30%" :close-on-click-modal="false">
       <el-form :model="userUpdatePwdForm" >
         <el-form-item label="旧密码" >
           <el-input placeholder="请输入密码" v-model="userUpdatePwdForm.oldPassword" show-password></el-input>

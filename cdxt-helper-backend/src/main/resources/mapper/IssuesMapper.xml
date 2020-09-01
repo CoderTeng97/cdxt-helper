@@ -172,11 +172,20 @@
             <if test="pUid!=null and pUid!=''">
                  p_uid = #{pUid},
             </if>
+
+            <if test="pUid!=null and pUid!=''">
+                p_uid = #{pUid},
+            </if>
+
             <if test="module!=null and module!=''">
                   module =#{module},
             </if>
+
             <if test="isDel!=null and isDel!=''">
                   is_del =#{isDel},
+            </if>
+            <if test="isDemand!=null and isDemand!=''">
+                is_demand =#{isDemand},
             </if>
         </trim>
         where id=#{id}

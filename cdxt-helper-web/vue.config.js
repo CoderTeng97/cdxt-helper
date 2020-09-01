@@ -25,7 +25,7 @@ module.exports = {
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
   publicPath: '/',
-  outputDir: '../cdxt-helper-backend/src/main/resources/static/',
+  outputDir: '../dist/',
   assetsDir: 'static',
   lintOnSave: false,
   //lintOnSave: process.env.NODE_ENV === 'development',
@@ -35,18 +35,10 @@ module.exports = {
     open: false,
     proxy:{
       '/dev-api': {
-        target: 'http://127.0.0.1:9028/',// 要跨域的域名
+        target: 'http://10.158.3.147:9026/',// 要跨域的域名
         changeOrigin: true, // 是否开启跨域
         pathRewrite:{
           '^/dev-api': ''
-        }
-      },
-
-      '/prod-api': {
-        target: 'http://39.106.183.121:9026',// 要跨域的域名
-        changeOrigin: true, // 是否开启跨域
-        pathRewrite:{
-          '^/prod-api': ''
         }
       },
     },

@@ -16,14 +16,11 @@ export function getInfo(token) {
   })
 }
 
-export function resetPassword(oldPassword,newPassword) {
+export function resetPassword(data) {
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { 
-      oldPassword,
-      newPassword
-    }
+    url: '/user/resetPassword',
+    method: 'put',
+    data: data
   })
 }
 
@@ -45,6 +42,18 @@ export function getUserList(role,text) {
     }
   })
 }
+
+/**
+ * 获取用户分页信息
+ */
+export function getUserPageInfo(req) {
+  return request({
+    url: '/user/page',
+    method: 'get',
+    params: req
+  })
+}
+
 
 export function setWatcher(data) {
   return request({

@@ -2,10 +2,13 @@ package com.cdxt.backend.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdxt.backend.dao.UserMapper;
 import com.cdxt.backend.model.User;
 import com.cdxt.backend.pojo.dto.UserLoginDTO;
+import com.cdxt.backend.pojo.vo.UserViewVO;
 import com.cdxt.backend.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cdxt.common.exception.ResponseCommonException;
@@ -106,10 +109,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (false == verifyUserPassword(uid,oldPassword)){
             throw  new ResponseCommonException(HttpStatus.BAD_REQUEST,"旧密码错误,请确认后重试");
         }
+        newPassword = bcryptPasswordEncoder.encode(newPassword);
         User user = new User();
         user.setPassword(newPassword);
         user.setId(uid);
         return  this.updateById(user);
+    }
+
+    @Override
+    public IPage<UserViewVO> getUserPageInfo(Integer pageNum, Integer pageSize, String trueName) {
+        Page page = new Page(pageNum,pageSize);
+        page.setDesc("gmt_create");
+        return baseMapper.selectViewPage(page,trueName);
     }
 
     /**

@@ -14,11 +14,11 @@
           </div>
           <div class="box-main">
             <el-row style="overflow-y:scroll; height:250px;">
-              <el-col v-for="item in logList" :key="item" :span="24" class="content" >
-                  <span
-                    v-if="item.type=='ISSUE_OP_LOG'"
-                  >{{ $moment(item.data.gmtCreate).format("HH:MM:SS") +' ' + item.data.content}}</span>
-                  <span v-if="item.type=='LOG'">{{item.gmt_create +' ' + item.message}}</span>
+              <el-col v-for="item in logList" :key="item" :span="24" class="content">
+                <span
+                  v-if="item.type=='ISSUE_OP_LOG'"
+                >{{ $moment(item.data.gmtCreate).format("HH:MM:SS") +' ' + item.data.content}}</span>
+                <span v-if="item.type=='LOG'">{{item.gmt_create +' ' + item.message}}</span>
               </el-col>
             </el-row>
           </div>
@@ -50,7 +50,7 @@
             >
               <el-table-column prop="trueName" label="姓名" width="100"></el-table-column>
               <el-table-column prop="module" label="负责模块" width="100" :formatter="moduleFormat"></el-table-column>
-              <el-table-column  label="值班结束时间">{{$moment(gmtEndTime).format("YYY-MM-DD HH:MM:SS")}}</el-table-column>
+              <el-table-column label="值班结束时间">{{$moment(gmtEndTime).format("YYY-MM-DD HH:MM:SS")}}</el-table-column>
               <el-table-column label="进行中的任务数" prop="processingTaskNum"></el-table-column>
               <!-- <el-table-column label="状态" width="100" prop="isOnline">{{isOnline==true? '在线':'离线'}}</el-table-column> -->
             </el-table>
@@ -248,6 +248,35 @@
         v-if="issueDialogConfig.name == 'issueAssignUser' || issueDialogConfig.name == 'issueCompletion' || issueDialogConfig.name == 'issueAuth'"
       >
         <el-row gutter="10">
+          <el-col :span="10" v-if="issueDialogConfig.name=='issueCompletion'">
+            <el-form-item label="问题分类">
+              <el-select
+                v-model="issueUpdateForm.classification"
+                filterable
+                default-first-option
+                placeholder="请选择问题类型"
+              >
+                <el-option
+                  v-for="item in classificationList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10" v-if="issueDialogConfig.name=='issueCompletion'">
+            <el-form-item label="是否为需求">
+              <el-select
+                v-model="issueUpdateForm.isDemand"
+                default-first-option
+                placeholder="选择是否为需求(可为空)"
+              >
+                <el-option key="0" label="否" value="0"></el-option>
+                <el-option key="1" label="是" value="1"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="15" v-if="issueDialogConfig.name=='issueAssignUser'">
             <el-form-item>
               <UserSearchSelect :role="DEVELOPER" v-model="issueUpdateForm.duid"></UserSearchSelect>
@@ -401,6 +430,7 @@ export default {
   },
   data() {
     return {
+      classificationList: [],
       watcherSetDialogVisible: false,
       issueDetailDialogVisible: false, //问题详情弹窗展示
       watcehrOnlieInfo: {}, //在线人员情况信息
@@ -425,6 +455,8 @@ export default {
         hospitalId: "",
         detail: "",
         priorityCode: "",
+        isDemand: "",
+        classification: "",
       }, //问题发布表单对象
       issuePostIsAddtional: false,
       hospitalSelectLoading: false, //医院搜索加载
@@ -537,7 +569,7 @@ export default {
      */
     initWebSocket() {
       //初始化weosocket
-      const wsuri = "ws://10.158.3.147:9028/wss/afs/issue/" + this.uid;
+      const wsuri = "ws://10.158.3.216:9026/wss/afs/issue/" + this.uid;
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onopen = this.websocketonopen;
@@ -585,16 +617,14 @@ export default {
      * wss提示处理
      */
     logHandler(data) {
-     
       let message = {
         message: data,
         type: "LOG",
         gmt_create: this.$moment(new Date()).format("HH:MM:SS"),
       };
       this.logList.push(message);
-       //日志提示时，更新问题处理人员列表数据
+      //日志提示时，更新问题处理人员列表数据
       this.refreshWatherOnlieState();
-
     },
     /**
      * wss 操作分发器 将不同类型的数据发送到不同的方法处理
@@ -742,6 +772,7 @@ export default {
           message: "设置成功！",
           type: "success",
         });
+        this.watcherSetDialogVisible = false;
       }
       return res;
     },
@@ -833,19 +864,18 @@ export default {
     async refreshWatherOnlieState() {
       let res = await getOnlineUserList();
       this.watcehrOnlieInfo = res;
-      this.watcherList.forEach((item,index,arr) =>{
-          for (var onlineUid of this.watcehrOnlieInfo.onlieUserList) {
+      this.watcherList.forEach((item, index, arr) => {
+        for (var onlineUid of this.watcehrOnlieInfo.onlieUserList) {
           //是否在线判断
           let isOnline = item.uid == onlineUid ? true : false;
           this.watcherList[index].isOnline = isOnline;
-           }
+        }
       });
-      console.log(this.watcherList)
+      console.log(this.watcherList);
     },
   },
 
   mounted() {
-
     //初始化字典
     this.moduleList = [
       { label: "住院", value: "1" },
@@ -859,6 +889,19 @@ export default {
       { label: "高", value: "3" },
       { label: "紧急", value: "4" },
     ];
+    this.classificationList = [
+      { label: "业务逻辑问题", value: "1" },
+      { label: "功能操作问题", value: "2" },
+      { label: "功能优化问题", value: "3" },
+      { label: "交互逻辑问题", value: "4" },
+      { label: "数据问题", value: "5" },
+      { label: "兼容性问题", value: "6" },
+      { label: "性能优化问题", value: "7" },
+      { label: "安全问题", value: "8" },
+      { label: "接口异常", value: "9" },
+      { label: "环境异常", value: "10" },
+      { label: "其他", value: "11" },
+    ];
     //初始化表格
     this.searchIssue((this.issueSearchParams = {}));
     this.getWatcherList();
@@ -870,29 +913,29 @@ export default {
     this.editorOption = quillRedefine({
       // 图片上传的设置
       uploadConfig: {
-        action: "/dev-api/file/upload", // 必填参数 图片上传地址,这里的后台是node
+        action: "/file/upload", // 必填参数 图片上传地址,这里的后台是node
         // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
         // 你必须把返回的数据中所包含的图片地址 return 回去
         name: "file",
+        header: (xhr, formData) => {
+              xhr.setRequestHeader('X-token',this.token);
+              formData.append('X-token', this.token)
+        },
         res: (respnse) => {
-          console.log(respnse);
-          //  var w=respnse.msg.img.path.indexOf('upload');
-
-          //  console.log( 'http://localhost:3000/images/' + respnse.msg.img.path.substring(w));
-
-          // 这里切记要return回你的图片地址
-          return "http://39.106.183.121/svn/1002.jpg";
+          if (respnse.code == 200) {
+            return respnse.data.fileDownloadUri;
+          }
         },
       },
       theme: "snow", //这个是组题
     });
-    
   },
   computed: {
     ...mapGetters({
       uid: "uid",
       username: "name",
       role: "role",
+      token: "token"
     }),
   },
   destroyed() {

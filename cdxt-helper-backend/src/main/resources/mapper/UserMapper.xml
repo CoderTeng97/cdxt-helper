@@ -16,11 +16,24 @@
     <sql id="Base_Column_List">
         id, username, password, role, gmt_create, gmt_modified
     </sql>
+
+    <sql id="View_Column_List">
+        id, username, true_name,phone,gender, role,dept, module,gmt_create
+    </sql>
     <select id="selectByUserLoginDTO" resultType="com.cdxt.common.pojo.vo.UserBaseVO">
         select  <include refid="Base_Column_List"></include>
         from tb_user
         where
         username=#{account,jdbcType=VARCHAR}
+    </select>
+    <select id="selectViewPage" resultType="com.cdxt.backend.pojo.vo.UserViewVO">
+
+        select  <include refid="View_Column_List"/>
+        from tb_user where
+        1 = 1
+        <if test="trueName !=null and trueName!=''">
+            and true_name like concat('%',#{trueName},'%')
+        </if>
     </select>
 
 </mapper>

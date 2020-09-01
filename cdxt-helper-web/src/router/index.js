@@ -70,6 +70,20 @@ export const commonRoutes = [
   },
 
   {
+    path: '/user/manager',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('../views/user/index.vue'),
+        meta: { title: '用户管理', icon: 'user',   },
+        roles: ['admin', "developer"]
+      }
+    ]
+  },
+
+  {
     path: '/deploy/list',
     component: Layout,
     children: [

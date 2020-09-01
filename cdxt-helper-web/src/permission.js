@@ -30,10 +30,7 @@ router.beforeEach(async(to, from, next) => {
       const hasGetUserInfo = store.getters.name;
       const userRoles = store.getters.role;
       const userRolesList = store.getters.roleRouter;
-
       console.log(hasGetUserInfo, userRoles, userRolesList);
-      
-
       // // get user info，未获取用户名或者 用户权限
       // const accessRoutes = await store.dispatch('user/generateRoutes', userRoles)
 

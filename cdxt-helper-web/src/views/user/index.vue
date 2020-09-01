@@ -18,37 +18,49 @@
             type="index"
             width="50">
           </el-table-column>
-          <el-table-column label="医院">
-            <template slot-scope="scope">{{ scope.row.name }}</template>
+          <el-table-column label="用户名">
+            <template slot-scope="scope">{{ scope.row.username }}</template>
           </el-table-column>
-          <el-table-column label="所属分支" align="center">
+          <el-table-column label="真实姓名" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.branch }}</span>
+              <span>{{ scope.row.trueName }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="created_at" label="发布时间">
+          <el-table-column align="center"  label="部门">
             <template slot-scope="scope">
-              <span>{{ scope.row.gmtCreate }}</span>
+              <span>{{ scope.row.dept }}</span>
             </template>
           </el-table-column>
 
-          <el-table-column align="center" prop="created_at" label="更新时间">
+          <el-table-column align="center" prop="created_at" label="负责模块">
             <template slot-scope="scope">
-              <span>{{ scope.row.gmtCreate }}</span>
+              <span>{{ scope.row.module}}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column align="center" prop="created_at" label="电话">
+            <template slot-scope="scope">
+              <span>{{ scope.row.phone}}</span>
+            </template>
+          </el-table-column>
+
+          <el-table-column align="center"  label="用户权限">
+            <template slot-scope="scope">
+              <span>{{ scope.row.role }}</span>
             </template>
           </el-table-column>
 
           <el-table-column align="left">
             <template slot="header" slot-scope="scope">
-              <el-input  v-model="rparams.text" size="medium" placeholder="输入关键字搜索"  >
+              <el-input  v-model="rparams.trueName" size="medium" placeholder="输入关键字搜索"  >
                  <el-button slot="append" icon="el-icon-search" @click="fetchData"></el-button>
               </el-input>
             </template>
             <template slot-scope="scope">
-              <i class="iconfont icon-fabu1" @click="showBranchDialog('update',scope.row)"></i>
+              <!-- <i class="iconfont icon-xiugai" @click="showBranchDialog('update',scope.row)"></i>
               <i class="iconfont icon-shujuku"></i>
               <i class="iconfont icon-aistubiaozhizuo--copy"></i>
-              <i class="iconfont icon-xianchangrenyuanweihu-copy"></i>
+              <i class="iconfont icon-xianchangrenyuanweihu-copy"></i> -->
                <!--<el-button
                 size="mini"
                 type="danger"
@@ -75,33 +87,40 @@
         </el-pagination>
       </el-col>
       <el-col>
-         <i class="iconfont icon-xinzeng" @click="showBranchDialog('post',null)" style="color: #66b1ff;">
-         </i>
+         <!-- <i class="iconfont icon-xinzeng" @click="showBranchDialog('post',null)" style="color: #66b1ff;">
+         </i> -->
       </el-col>
     </el-row>
 
 
-     <!-- 医院发布及更新弹窗 -->
+     <!-- 新增用户-->
     <el-dialog  
-    :title="branchUpdateFormModel=='update'?'分支更新' : '分支发布'" 
-    :visible.sync="branchUpdateFormVisible"
+    :title="新增用户" 
+    :visible.sync="userRegistrationFormVisible"
     width="30%"
     >
-      <el-form :model="branchUpdateForm" ref="branchUpdateForm" :rules="rules">
-        <el-form-item  label="医院Id" :label-width="formLabelWidth" hidden>
-          <el-input v-model="branchUpdateForm.id"></el-input>
+      <el-form :model="userRegistrationForm" ref="userRegistrationForm" :rules="rules">
+        <el-form-item  label="用户名" :label-width="formLabelWidth" hidden>
+          <el-input v-model="userRegistrationForm.username"></el-input>
         </el-form-item>
-        <el-form-item  prop="name" label="医院名称" :label-width="formLabelWidth">
-          <el-input v-model="branchUpdateForm.name" placeholder="请输入医院名称"
+        <el-form-item  prop="name" label="真实姓名" :label-width="formLabelWidth">
+          <el-input v-model="userRegistrationForm.name" placeholder="请输入姓名"
           ></el-input>
         </el-form-item>
-        <el-form-item  prop="branch" label="对应分支" :label-width="formLabelWidth">
-          <el-input v-model="branchUpdateForm.branch"  placeholder="请输入对应分支信息"></el-input>
+        <el-form-item  prop="branch" label="部门" :label-width="formLabelWidth">
+          <el-input v-model="userRegistrationForm.branch"  placeholder="请输入部门"></el-input>
+        </el-form-item>
+        <el-form-item  prop="branch" label="模块" :label-width="formLabelWidth">
+          <el-input v-model="userRegistrationForm.branch"  placeholder="请输入部门"></el-input>
+        </el-form-item>
+        <el-form-item  prop="branch" label="权限" :label-width="formLabelWidth">
+          <el-input v-model="userRegistrationForm.branch"  placeholder="请输入部门"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitBranchUpdateForm('branchUpdateForm')">{{branchUpdateFormModel=='update'?'更 新' : '发 布'}}</el-button>
-        <el-button @click="branchUpdateFormVisible = false">取 消</el-button>
+        <el-button @click="userRegistrationFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submituserRegistrationForm('userRegistrationForm')">{{userRegistrationFormModel=='update'?'更 新' : '发 布'}}</el-button>
+
       </div>
 </el-dialog>
   </div>
@@ -122,8 +141,7 @@
 </style>
 
 <script>
-import { deployList, getHospital,saveAndUpdateHospital } from "../../api/deploy";
-
+import { getUserPageInfo} from "@/api/user"
 export default {
   data() {
     return {
@@ -131,13 +149,13 @@ export default {
       listLoading: true,
       isUpdate: false, //是否修改
       rparams: {
-        text: '',
+        trueName: '',
         pageNum: 1,
         pageSize: 10
       },
-      branchUpdateFormVisible:false,//显示更新或发布分支弹窗
-      branchUpdateFormModel:"post",//分支更新弹窗类型
-      branchUpdateForm:{
+      userRegistrationFormVisible:false,//显示更新或发布分支弹窗
+      userRegistrationFormModel:"post",//分支更新弹窗类型
+      userRegistrationForm:{
         id:"",
         name:"",
         branch:"",
@@ -168,7 +186,7 @@ export default {
     }
   },
   created() {
-    this.rparams.text='';
+    this.rparams.trueName='';
     this.fetchData();
   },
   methods: {
@@ -176,16 +194,16 @@ export default {
      * 打开更新或新增弹窗
      */
     showBranchDialog(model,data){
-        this.branchUpdateFormVisible=true;
-        this.branchUpdateFormModel = model!= 'post' && model!= 'update' ? 'post' : model;
-        if(this.branchUpdateFormModel == 'update'){
-          this.branchUpdateForm = data
+        this.userRegistrationFormVisible=true;
+        this.userRegistrationFormModel = model!= 'post' && model!= 'update' ? 'post' : model;
+        if(this.userRegistrationFormModel == 'update'){
+          this.userRegistrationForm = data
         }else{
-          this.branchUpdateForm={}
+          this.userRegistrationForm={}
         }
-        console.log(this.branchUpdateForm)
+        console.log(this.userRegistrationForm)
     },
-    submitBranchUpdateForm(fromName){
+    submituserRegistrationForm(fromName){
       this.$refs[fromName].validate(valid => {
         if (valid) {
           this.saveAndUpdateBranch();
@@ -195,19 +213,19 @@ export default {
       });
     },
     async saveAndUpdateBranch(){
-      console.log(this.branchUpdateForm)
-      let result = await saveAndUpdateHospital(this.branchUpdateForm)
+      console.log(this.userRegistrationForm)
+      let result = await saveAndUpdateHospital(this.userRegistrationForm)
       if(result){
         this.$message({
           message: "操作成功",
           type: "success"
         });
-        this.branchUpdateFormVisible=false;
+        this.userRegistrationFormVisible=false;
       }
     },
     fetchData() {
       this.listLoading = true;
-      this.getHospitalList();
+      this.getUserList();
       this.listLoading = false;
     },
     stateClickEvent(index, row) {
@@ -219,8 +237,8 @@ export default {
     /**
      * 获取医院列表
      */
-    async getHospitalList() {
-      let res = await getHospital(this.rparams);
+    async getUserList() {
+      let res = await getUserPageInfo(this.rparams);
       this.resData = res;
     },
 

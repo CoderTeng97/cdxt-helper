@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @ApiModel(description = "售后问题更新DTO")
-public class IssuesUpdateDTO implements Serializable {
+public class IssuesUpdateDTO {
 
     /**
      * 问题
@@ -41,7 +41,7 @@ public class IssuesUpdateDTO implements Serializable {
     /**
      * 分类
      */
-    @ApiModelProperty(value = "问题标题" ,required =  false)
+    @ApiModelProperty(value = "问题分类" ,required =  false)
     private String classification;
 
     /**
@@ -89,5 +89,9 @@ public class IssuesUpdateDTO implements Serializable {
 
     @ApiModelProperty(value = "反馈内容" ,required =  false)
     private String feedBackText;
+
+    @ApiModelProperty(value = "是否为需求" ,required =  false)
+    private Integer isDemand;
+
 
 }

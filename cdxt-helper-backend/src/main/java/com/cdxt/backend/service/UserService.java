@@ -1,8 +1,10 @@
 package com.cdxt.backend.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.cdxt.backend.model.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cdxt.backend.pojo.dto.UserLoginDTO;
+import com.cdxt.backend.pojo.vo.UserViewVO;
 import com.cdxt.common.pojo.vo.UserBaseVO;
 
 import java.util.List;
@@ -56,7 +58,24 @@ public interface UserService extends IService<User> {
      */
     Boolean isExistUser(String uid);
 
+    /**
+     * 重置密码
+     * @param oldPassword
+     * @param newPassword
+     * @param uid
+     * @return
+     */
     Boolean resetPassword(String oldPassword,String newPassword,String uid);
+
+
+    /**
+     * 获取用户分页信息
+     * @param pageNum
+     * @param pageSize
+     * @param trueName
+     * @return
+     */
+    IPage<UserViewVO> getUserPageInfo(Integer pageNum, Integer pageSize, String trueName);
 
 
 }

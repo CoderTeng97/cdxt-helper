@@ -1,5 +1,5 @@
 server:
-  port: 9028
+  port: 9026
 
 spring:
   cloud:
@@ -19,6 +19,6 @@ spring:
 
 file:
   upload:
-    path: D:\临时文件
+    path: D:\Temp
   download:
     uri: http://127.0.0.1/cdxt/
