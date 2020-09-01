@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export function postIssue(data) {
     return request({
-      url: '/after-safe/issue/release',
+      url: '/api/after-safe/issue/release',
       method: 'POST',
       data:data
     })
@@ -18,7 +18,7 @@ export function postIssue(data) {
  */
 export function updateIssueState(data) {
     return request({
-      url: '/after-safe/issue/updateState',
+      url: '/api/after-safe/issue/updateState',
       method: 'PUT',
       data:data
     })
@@ -31,7 +31,7 @@ export function updateIssueState(data) {
  */
 export function issueAssign(data) {
     return request({
-      url: '/after-safe/issue/assignUser',
+      url: '/api/after-safe/issue/assignUser',
       method: 'PUT',
       data:data
     })
@@ -46,7 +46,7 @@ export function issueAssign(data) {
  */
 export function searchIssue(data){
     return request({
-        url: '/after-safe/issue/list',
+        url: '/api/after-safe/issue/list',
         method: 'POST',
         data:data
     })
@@ -59,7 +59,7 @@ export function searchIssue(data){
  */
 export function getWatcherList(){
     return request({
-        url: '/user/watcher/list',
+        url: '/api/user/watcher/list',
         method: 'GET',
     })
 }
@@ -70,7 +70,7 @@ export function getWatcherList(){
  */
 export function getIssueDetail(issueId){
     return request({
-        url: '/after-safe/issue/detail/' + issueId,
+        url: '/api/after-safe/issue/detail/' + issueId,
         method: 'GET',
     })
 }
@@ -80,7 +80,7 @@ export function getIssueDetail(issueId){
  */
 export function getOnlineUserList(){
     return request({
-        url: '/after-safe/issue/onlineUser/state',
+        url: '/api/after-safe/issue/onlineUser/state',
         method: 'GET',
     })
 }

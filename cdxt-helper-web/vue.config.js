@@ -34,24 +34,16 @@ module.exports = {
     port: port,
     open: false,
     proxy:{
-      '/dev-api': {
-        target: 'http://10.158.3.147:9026/',// 要跨域的域名
+      '/api': {
+        target: process.env.VUE_APP_BASE_API,// 要跨域的域名
         changeOrigin: true, // 是否开启跨域
         pathRewrite:{
-          '^/dev-api': ''
+          '^/api': ''
         }
-      },
+      }
     },
+    
   },
-  // devServer: {
-  //   port: port,
-  //   open: true,
-  //   overlay: {
-  //     warnings: false,
-  //     errors: true
-  //   },
-  //   before: require('./mock/mock-server.js')
-  // },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.

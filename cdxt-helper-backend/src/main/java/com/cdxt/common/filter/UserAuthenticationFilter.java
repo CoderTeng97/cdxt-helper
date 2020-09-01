@@ -5,6 +5,7 @@ package com.cdxt.common.filter;
 import com.cdxt.common.utils.FilterResponseUtil;
 import com.cdxt.common.utils.JwtTokenUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.Header;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,6 +35,15 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         /**用户凭证检查*/
         String token = httpServletRequest.getHeader("X-Token");
+
+        System.out.println("method " + httpServletRequest.getMethod());
+        System.out.println("uri " + httpServletRequest.getRequestURI());
+        System.out.println("r host : " + httpServletRequest.getRemoteHost());
+        System.out.println("r host : " + httpServletRequest.getRemoteAddr());
+        for (Cookie cookie : httpServletRequest.getCookies()){
+            System.out.println(cookie.getName());
+        }
+        System.out.println("token : " + token);
         try {
             if (StringUtils.isEmpty(token)) {
                 FilterResponseUtil.response("无效的登录凭证", HttpStatus.FORBIDDEN);

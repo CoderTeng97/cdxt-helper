@@ -6,7 +6,7 @@ import request from '@/utils/request'
  */
 export function deployPost(data) {
     return request({
-      url: '/deploy/post',
+      url: '/api/deploy/post',
       method: 'PUT',
       data:data
     })
@@ -17,7 +17,7 @@ export function deployPost(data) {
  */
 export function getHospital(param) {
     return request({
-      url: '/common/hospitals',
+      url: '/api/common/hospitals',
       method: 'GET',
       params:param
     })
@@ -29,7 +29,7 @@ export function getHospital(param) {
    */
   export function deployList(param) {
     return request({
-      url: '/deploy/list',
+      url: '/api/deploy/list',
       method: 'post',
       data:param
     })
@@ -41,7 +41,7 @@ export function getHospital(param) {
    */
   export function udpateState(data) {
     return request({
-      url: '/deploy/update/state',
+      url: '/api/deploy/update/state',
       method: 'post',
       params:data
     })
@@ -54,7 +54,7 @@ export function getHospital(param) {
    */
   export function saveAndUpdateHospital(data) {
     return request({
-      url: '/deploy/savaOrUpdateHospital',
+      url: '/api/deploy/savaOrUpdateHospital',
       method: 'post',
       data:data
     })
@@ -67,7 +67,7 @@ export function getHospital(param) {
    */
   export function downloadPatches(patchId) {
     return request({
-      url: '/deploy/patches/download?patchId=' + patchId,
+      url: '/api/deploy/patches/download?patchId=' + patchId,
       method: 'get',
     })
   }

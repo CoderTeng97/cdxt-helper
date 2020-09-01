@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/user/login',
+    url: '/api/user/login',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/user/info',
+    url: '/api/user/info',
     method: 'get',
     params: { token }
   })
@@ -18,7 +18,7 @@ export function getInfo(token) {
 
 export function resetPassword(data) {
   return request({
-    url: '/user/resetPassword',
+    url: '/api/user/resetPassword',
     method: 'put',
     data: data
   })
@@ -26,7 +26,7 @@ export function resetPassword(data) {
 
 export function logout() {
   return request({
-    url: '/user/logout',
+    url: '/api/user/logout',
     method: 'post'
   })
 }
@@ -34,7 +34,7 @@ export function logout() {
 
 export function getUserList(role,text) {
   return request({
-    url: '/user/list',
+    url: '/api/user/list',
     method: 'get',
     params:{
       role,
@@ -48,7 +48,7 @@ export function getUserList(role,text) {
  */
 export function getUserPageInfo(req) {
   return request({
-    url: '/user/page',
+    url: '/api/user/page',
     method: 'get',
     params: req
   })
@@ -57,7 +57,7 @@ export function getUserPageInfo(req) {
 
 export function setWatcher(data) {
   return request({
-    url: '/user/watcher/set',
+    url: '/api/user/watcher/set',
     method: 'get',
     params:data
   })

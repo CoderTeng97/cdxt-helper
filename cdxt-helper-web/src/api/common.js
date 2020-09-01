@@ -5,7 +5,7 @@ import request from '@/utils/request'
  */
 export function getHospitalList(param) {
     return request({
-      url: '/common/hospitals',
+      url: '/api/common/hospitals',
       method: 'GET',
       params:param
     })
