@@ -62,3 +62,12 @@ export function setWatcher(data) {
     params:data
   })
 }
+
+
+export function userUpdate(data) {
+  return request({
+    url: '/api/user/update',
+    method: 'put',
+    data: data
+  })
+}

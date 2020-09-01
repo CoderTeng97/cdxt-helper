@@ -65,7 +65,7 @@
           <div class="box-header">
             <el-row>
               <el-col :span="14">
-                <i class="iconfont icon-imagevector"></i>问题处理日志
+                <i class="iconfont icon-imagevector"></i>问题列表
               </el-col>
               <el-col :span="10"></el-col>
             </el-row>
@@ -919,7 +919,6 @@ export default {
         name: "file",
         header: (xhr, formData) => {
               xhr.setRequestHeader('X-token',this.token);
-              formData.append('X-token', this.token)
         },
         res: (respnse) => {
           if (respnse.code == 200) {

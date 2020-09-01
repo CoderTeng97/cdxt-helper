@@ -7,17 +7,14 @@
           border
           :data="resData.records"
           element-loading-text="Loading"
-          fit="true"
+          :fit="true"
           highlight-current-row
         >
           <!-- <el-table-column label="ID">
             <template slot-scope="scope">{{ scope.row.id }}</template>
-          </el-table-column> -->
+          </el-table-column>-->
 
-           <el-table-column
-            type="index"
-            width="50">
-          </el-table-column>
+          <el-table-column type="index" width="50"></el-table-column>
           <el-table-column label="用户名">
             <template slot-scope="scope">{{ scope.row.username }}</template>
           </el-table-column>
@@ -26,7 +23,7 @@
               <span>{{ scope.row.trueName }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center"  label="部门">
+          <el-table-column align="center" label="部门">
             <template slot-scope="scope">
               <span>{{ scope.row.dept }}</span>
             </template>
@@ -44,7 +41,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column align="center"  label="用户权限">
+          <el-table-column align="center" label="用户权限">
             <template slot-scope="scope">
               <span>{{ scope.row.role }}</span>
             </template>
@@ -52,29 +49,29 @@
 
           <el-table-column align="left">
             <template slot="header" slot-scope="scope">
-              <el-input  v-model="rparams.trueName" size="medium" placeholder="输入关键字搜索"  >
-                 <el-button slot="append" icon="el-icon-search" @click="fetchData"></el-button>
+              <el-input v-model="rparams.trueName" size="medium" placeholder="输入关键字搜索">
+                <el-button slot="append" icon="el-icon-search" @click="fetchData"></el-button>
               </el-input>
             </template>
             <template slot-scope="scope">
-              <!-- <i class="iconfont icon-xiugai" @click="showBranchDialog('update',scope.row)"></i>
-              <i class="iconfont icon-shujuku"></i>
+              <el-button type="text" @click="showBranchDialog('update',scope.row)">修改</el-button>
+              <!-- <i class="iconfont icon-xiugai" @click="showBranchDialog('update',scope.row)">修改1</i> -->
+              <!-- <i class="iconfont icon-shujuku"></i>
               <i class="iconfont icon-aistubiaozhizuo--copy"></i>
-              <i class="iconfont icon-xianchangrenyuanweihu-copy"></i> -->
-               <!--<el-button
+              <i class="iconfont icon-xianchangrenyuanweihu-copy"></i>
+               <el-button
                 size="mini"
                 type="danger"
                 @click="handleDelete(scope.$index, scope.row)"
-              >Delete</el-button> -->
+              >Delete</el-button>-->
             </template>
           </el-table-column>
         </el-table>
       </el-col>
-     
     </el-row>
-     
+
     <el-row type="flex" style="margin-top: 20px;">
-      <el-col span="">
+      <el-col :span="24">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -83,91 +80,112 @@
           :page-size="rparams.pageSize"
           layout="total,sizes, prev, pager, next"
           :total="resData.total"
-        >
-        </el-pagination>
+        ></el-pagination>
       </el-col>
       <el-col>
-         <!-- <i class="iconfont icon-xinzeng" @click="showBranchDialog('post',null)" style="color: #66b1ff;">
-         </i> -->
+        <!-- <i class="iconfont icon-xinzeng" @click="showBranchDialog('post',null)" style="color: #66b1ff;">
+        </i>-->
       </el-col>
     </el-row>
 
-
-     <!-- 新增用户-->
-    <el-dialog  
-    :title="新增用户" 
-    :visible.sync="userRegistrationFormVisible"
-    width="30%"
-    >
-      <el-form :model="userRegistrationForm" ref="userRegistrationForm" :rules="rules">
-        <el-form-item  label="用户名" :label-width="formLabelWidth" hidden>
-          <el-input v-model="userRegistrationForm.username"></el-input>
+    <!-- 新增用户-->
+    <el-dialog title="修改信息" :visible.sync="userSaveAndUpdateFormVisible" width="30%">
+      <el-form :model="userSaveAndUpdateForm" ref="userSaveAndUpdateForm" :rules="rules">
+        <el-form-item label="用户名" label-width="80px" >
+          <el-input v-model="userSaveAndUpdateForm.username"   disabled="false"></el-input>
         </el-form-item>
-        <el-form-item  prop="name" label="真实姓名" :label-width="formLabelWidth">
-          <el-input v-model="userRegistrationForm.name" placeholder="请输入姓名"
-          ></el-input>
+        <el-form-item label="真实姓名" label-width="80px" >
+          <el-input v-model="userSaveAndUpdateForm.trueName"  disabled="false"></el-input>
         </el-form-item>
-        <el-form-item  prop="branch" label="部门" :label-width="formLabelWidth">
-          <el-input v-model="userRegistrationForm.branch"  placeholder="请输入部门"></el-input>
+        <el-form-item prop="branch" label="部门" label-width="80px">
+          <el-input v-model="userSaveAndUpdateForm.dept" placeholder="请输入部门"></el-input>
         </el-form-item>
-        <el-form-item  prop="branch" label="模块" :label-width="formLabelWidth">
-          <el-input v-model="userRegistrationForm.branch"  placeholder="请输入部门"></el-input>
+        <el-form-item prop="branch" label="模块" label-width="80px">
+          <!-- <el-input v-model="userSaveAndUpdateForm.module"  placeholder="请输入模块"></el-input> -->
+          <el-select
+            v-model="userSaveAndUpdateForm.module"
+            placeholder="请选择"
+            label-width="80px"
+            style="width: 100%;"
+          >
+            <el-option
+              v-for="item in moduleList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item  prop="branch" label="权限" :label-width="formLabelWidth">
-          <el-input v-model="userRegistrationForm.branch"  placeholder="请输入部门"></el-input>
+        <el-form-item prop="branch" label="权限" label-width="80px">
+          <el-select
+            v-model="userSaveAndUpdateForm.role"
+            placeholder="请选择"
+            label-width="80px"
+            style="width: 100%;"
+          >
+            <el-option v-for="(item, index) in branchList" :key="index" :label="item" :value="item"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="userRegistrationFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submituserRegistrationForm('userRegistrationForm')">{{userRegistrationFormModel=='update'?'更 新' : '发 布'}}</el-button>
-
+        <el-button @click="userSaveAndUpdateFormVisible = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click="submituserSaveAndUpdateForm('userSaveAndUpdateForm')"
+        >{{userSaveAndUpdateFormModel=='update'?'更 新' : '发 布'}}</el-button>
       </div>
-</el-dialog>
+    </el-dialog>
   </div>
 </template>
 <style lang="scss" scoped>
-  .iconfont{
-    font-size: 25px;
-    cursor: pointer;
-  }
+.iconfont {
+  font-size: 25px;
+  cursor: pointer;
+}
 
-  .m-color
-  {
-    color: #6cb6ff;
-  }
-
-</style>>
-
+.m-color {
+  color: #6cb6ff;
+}
 </style>
 
 <script>
-import { getUserPageInfo} from "@/api/user"
+import { getUserPageInfo,userUpdate } from "@/api/user";
 export default {
   data() {
     return {
+      currentPage2: 1,
+
       resData: {},
       listLoading: true,
       isUpdate: false, //是否修改
       rparams: {
-        trueName: '',
+        trueName: "",
         pageNum: 1,
         pageSize: 10
       },
-      userRegistrationFormVisible:false,//显示更新或发布分支弹窗
-      userRegistrationFormModel:"post",//分支更新弹窗类型
-      userRegistrationForm:{
-        id:"",
-        name:"",
-        branch:"",
+      userSaveAndUpdateFormVisible: false, //显示更新或发布分支弹窗
+      userSaveAndUpdateFormModel: "post", //分支更新弹窗类型
+      userSaveAndUpdateForm: {
+        id: "",
+        name: "",
+        module: "",
+        role: "",
+        dept: ""
       },
-      rules:{
-        name: [
-            { required: true, message: '请输入医院名称', trigger: 'blur' },
-          ],
-         branch: [
-            { required: true, message: '请输入分支信息', trigger: 'blur' },
-          ]
-      }
+      rules: {
+        name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        module: [{ required: true, message: "请选择模块", trigger: "change" }]
+      },
+
+      //修改弹框
+      //用户权限
+      branchList: ["ADMIN", "IMPLEMENTER", "DEVELOPER","AFTERSAFE"],
+      moduleList: [
+        { label: "住院", value: "1" },
+        { label: "护士", value: "2" },
+        { label: "药品", value: "3" },
+        { label: "门诊", value: "4" }
+      ]
     };
   },
   filters: {
@@ -186,41 +204,49 @@ export default {
     }
   },
   created() {
-    this.rparams.trueName='';
+    this.rparams.trueName = "";
     this.fetchData();
   },
   methods: {
     /**
      * 打开更新或新增弹窗
      */
-    showBranchDialog(model,data){
-        this.userRegistrationFormVisible=true;
-        this.userRegistrationFormModel = model!= 'post' && model!= 'update' ? 'post' : model;
-        if(this.userRegistrationFormModel == 'update'){
-          this.userRegistrationForm = data
-        }else{
-          this.userRegistrationForm={}
-        }
-        console.log(this.userRegistrationForm)
+    showBranchDialog(model, data) {
+      this.userSaveAndUpdateFormVisible = true;
+      this.userSaveAndUpdateForm.id = data.id || 0;
+      this.userSaveAndUpdateForm.trueName = data.trueName || "";
+      this.userSaveAndUpdateForm.username = data.username || "";
+      this.userSaveAndUpdateForm.modulemodule = data.module || "";
+      this.userSaveAndUpdateForm.role = data.role || "";
+      this.userSaveAndUpdateForm.dept = data.dept || "";
+
+      this.userSaveAndUpdateFormModel =
+        model != "post" && model != "update" ? "post" : model;
+      if (this.userSaveAndUpdateFormModel == "update") {
+        this.userSaveAndUpdateForm = data;
+      } else {
+        this.userSaveAndUpdateForm = {};
+      }
+      console.log(this.userSaveAndUpdateForm);
     },
-    submituserRegistrationForm(fromName){
+    submituserSaveAndUpdateForm(fromName) {
       this.$refs[fromName].validate(valid => {
         if (valid) {
-          this.saveAndUpdateBranch();
+          this.userSaveAndUpdate();
         } else {
           return false;
         }
       });
     },
-    async saveAndUpdateBranch(){
-      console.log(this.userRegistrationForm)
-      let result = await saveAndUpdateHospital(this.userRegistrationForm)
-      if(result){
+    async userSaveAndUpdate() {
+      console.log(this.userSaveAndUpdateForm);
+      let result = await userUpdate(this.userSaveAndUpdateForm);
+      if (result) {
         this.$message({
           message: "操作成功",
           type: "success"
         });
-        this.userRegistrationFormVisible=false;
+        this.userSaveAndUpdateFormVisible = false;
       }
     },
     fetchData() {
@@ -234,9 +260,7 @@ export default {
       this.updateState(row.id, 1);
       this.fetchData();
     },
-    /**
-     * 获取医院列表
-     */
+
     async getUserList() {
       let res = await getUserPageInfo(this.rparams);
       this.resData = res;

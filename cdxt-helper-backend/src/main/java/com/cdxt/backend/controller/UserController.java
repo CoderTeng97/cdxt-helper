@@ -3,9 +3,12 @@ package com.cdxt.backend.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.cdxt.backend.convert.UserConvert;
+import com.cdxt.backend.model.Issues;
 import com.cdxt.backend.model.WatchList;
 import com.cdxt.backend.pojo.dto.UserLoginDTO;
 import com.cdxt.backend.model.User;
+import com.cdxt.backend.pojo.dto.UserUpdateDTO;
 import com.cdxt.backend.pojo.vo.DeployViewVO;
 import com.cdxt.backend.pojo.vo.UserViewVO;
 import com.cdxt.backend.pojo.vo.WatcherVO;
@@ -38,6 +41,8 @@ public class UserController extends BaseController {
     WatchListService watchListService;
     @Autowired
     IdWorker idWorker;
+    @Autowired
+    UserConvert userConvert;
 
     /**
      * 用户登录
@@ -128,12 +133,23 @@ public class UserController extends BaseController {
      * @return
      */
     @PutMapping("/resetPassword")
-    public Boolean resetPassword(Map<String,String> req){
+    public Boolean resetPassword(@RequestBody Map<String,String> req){
         String oldPassword = req.get("oldPassword");
         String newPassword = req.get("newPassword");
         if (StringUtils.isEmpty(oldPassword) || StringUtils.isEmpty(oldPassword) ){
             throw  new ResponseCommonException(HttpStatus.BAD_REQUEST,"密码不能为空");
         }
         return userService.resetPassword(oldPassword,newPassword,getUid());
+    }
+
+    /**
+     * 用户信息更新
+     * @param dto
+     * @return
+     */
+    @PutMapping("/update")
+    public Boolean update(@RequestBody  UserUpdateDTO dto){
+        User user = userConvert.updateParams2Entity(dto);
+        return  userService.updateById(user);
     }
 }

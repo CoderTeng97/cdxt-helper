@@ -67,5 +67,10 @@ public class User implements Serializable {
      */
     private String module;
 
+    /**
+     * 所在部门
+     */
+    private String dept;
+
 
 }
