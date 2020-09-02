@@ -31,7 +31,35 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 
+ //公共的
 export const commonRoutes = [
+  {
+    path: '/login',
+    component: () => import('@/views/login/index'),
+    hidden: true
+  },
+
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: 'dashboard',
+      name: "Dashboard",
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '首页', icon: 'dashboard' }
+    }]
+  },
+
+]
+
+export const commonRoutes1 = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -130,7 +158,8 @@ export const commonRoutes = [
  
 ]
 
-export const constantRoutes = [
+//具有权限的
+export const jurisdictionRouters = [
  
   {
     path: '/deploy/post',
@@ -141,7 +170,7 @@ export const constantRoutes = [
         name: 'Form',
         component: () => import('../views/deploy/post.vue'),
         meta: { title: '补丁发布', icon: 'form',   },
-        roles: ['admin', "developer"]
+        roles: ['ADMIN', "DEVELOPER"]
       }
     ]
   },
@@ -155,7 +184,7 @@ export const constantRoutes = [
         name: 'Form',
         component: () => import('../views/deploy/list.vue'),
         meta: { title: '补丁列表', icon: 'table',  },
-        roles: ['admin','developer','deployer']
+        roles: ['ADMIN','DEVELOPER','DEPLOYER']
       }
     ]
   },
@@ -169,7 +198,7 @@ export const constantRoutes = [
         name: 'Form',
         component: () => import('../views/deploy/branchManager.vue'),
         meta: { title: '医院分支管理', icon: 'table', },
-        roles: ['admin',"developer",'deployer']
+        roles: ['ADMIN',"DEVELOPER",'DEPLOYER']
       }
     ]
   },
@@ -184,7 +213,7 @@ export const constantRoutes = [
         name: 'Form',
         component: () => import('../views/afterSafe/issueManager.vue'),
         meta: { title: '售后问题管理', icon: 'table',  },
-        roles: ['admin', 'developer','aftersafo']
+        roles: ['ADMIN', 'DEVELOPER','AFTERSAFE']
       }
     ]
   },
@@ -194,7 +223,7 @@ export const constantRoutes = [
 export const createRouter = () => new Router({
   mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: commonRoutes
+  routes: commonRoutes1
 })
 
 const router = createRouter()

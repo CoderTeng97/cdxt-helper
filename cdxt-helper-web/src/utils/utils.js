@@ -20,7 +20,7 @@ export function getRoutersInfo(userRoles, routesArray) {
                 } else {
                     //无孩子节点
                     rolesList.forEach(rolesItem => {
-                        if(userRoles === rolesItem) {
+                        if(userRoles.trim() === rolesItem.trim()) {
                             routersList.push(routesArray)
                         }
                     });

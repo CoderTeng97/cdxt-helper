@@ -1,6 +1,6 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import router,{ resetRouter, constantRoutes, commonRoutes } from '@/router'
+import router,{ resetRouter, jurisdictionRouters, commonRoutes, createRouter } from '@/router'
 import {getRoutersInfo, unique} from '@/utils/utils'
 
 const getDefaultState = () => {
@@ -52,6 +52,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ account: account.trim(), password: password }).then(response => {
         //const { data } = response.data
+        // response = {"msg":"OK","code":200,"data":{"id":"1300630579074981888","username":"admin","role":"AFTERSAFE","token":"eyJhbGciOiJIUzUxMiJ9.eyJ1aWQiOiIxMzAwNjMwNTc5MDc0OTgxODg4Iiwicm9sZSI6IkFETUlOIiwiZXhwIjoxNTk5MTM2NDQxLCJpYXQiOjE1OTkwNTAwNDEsInVzZXJuYW1lIjoiYWRtaW4ifQ.Fo5ctf1GuKzBphdS1T_l85iIZjdC02LpgHDngdjIiuZS2gVd7KmgZCxUcTbw-nOmOZUFlaQpTraDdMlG65Atnw"}};
+        // response = response.data
         commit('SET_TOKEN', response.token)
         commit("SET_ROLE", response.role)
         commit("SET_UID", response.id)
@@ -71,11 +73,8 @@ const actions = {
   //根据当前用户信息，获取新路由
   generateRoutes({commit}, userRoles) {
     return new Promise((resolve, reject) => {
-      console.log(router, userRoles);
       let accessedRoutes = [];
-
-      accessedRoutes = unique(getRoutersInfo(userRoles, constantRoutes))
-
+      accessedRoutes = unique(getRoutersInfo(userRoles, jurisdictionRouters))
       let res = commonRoutes.concat(accessedRoutes)
 
       res.push(
@@ -83,6 +82,12 @@ const actions = {
         { path: '*', redirect: '/404', hidden: true }
       )
       commit('SET_ROLE_ROUTER', res)
+
+      //重置路由
+      router.options.routes = res
+      router.matcher = createRouter().matcher
+      router.addRoutes(res)
+      console.log("123",res, router)
       
       resolve(res)
     })

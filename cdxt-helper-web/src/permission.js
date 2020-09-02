@@ -1,11 +1,10 @@
-import router from './router'
+import router, {createRouter} from './router'
 import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
-import {getRoutersInfo, unique} from '@/utils/utils'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
@@ -30,14 +29,14 @@ router.beforeEach(async(to, from, next) => {
       const hasGetUserInfo = store.getters.name;
       const userRoles = store.getters.role;
       const userRolesList = store.getters.roleRouter;
-      console.log(hasGetUserInfo, userRoles, userRolesList);
-      // // get user info，未获取用户名或者 用户权限
+      
+      // get user info，未获取用户名或者 用户权限
       // const accessRoutes = await store.dispatch('user/generateRoutes', userRoles)
 
-      // //重置路由
+      //重置路由
       // router.options.routes = accessRoutes
+      // router.matcher = createRouter(accessRoutes).matcher
       // router.addRoutes(accessRoutes)
-      // console.log("ddd",accessRoutes);
       
       
       if (hasGetUserInfo && userRoles && userRolesList.length > 0) {
@@ -47,15 +46,15 @@ router.beforeEach(async(to, from, next) => {
       } else {
         try {
 
-          console.log("重新获取权限");
+          // console.log("重新获取权限");
 
-          // // get user info，未获取用户名或者 用户权限
+          // get user info，未获取用户名或者 用户权限
           // const accessRoutes = await store.dispatch('user/generateRoutes', userRoles)
-          // //重置路由
+          //重置路由
           // router.options.routes = accessRoutes
+          // router.matcher = createRouter().matcher
           // router.addRoutes(accessRoutes)
-
-          // console.log("ddd",accessRoutes)
+          // console.log("123",accessRoutes, router)
        
           next()
         } catch (error) {
