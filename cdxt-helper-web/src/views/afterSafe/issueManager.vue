@@ -913,7 +913,7 @@ export default {
     this.editorOption = quillRedefine({
       // 图片上传的设置
       uploadConfig: {
-        action: "/file/upload", // 必填参数 图片上传地址,这里的后台是node
+        action: "/api/file/upload", // 必填参数 图片上传地址,这里的后台是node
         // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
         // 你必须把返回的数据中所包含的图片地址 return 回去
         name: "file",
