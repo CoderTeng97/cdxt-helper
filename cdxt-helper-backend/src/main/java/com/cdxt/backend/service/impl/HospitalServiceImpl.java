@@ -8,6 +8,7 @@ import com.cdxt.backend.model.Hospital;
 import com.cdxt.backend.pojo.dto.HospitalUpdateDTO;
 import com.cdxt.backend.service.HospitalService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cdxt.common.exception.ResponseCommonException;
 import com.cdxt.common.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,12 @@ public class HospitalServiceImpl extends ServiceImpl<HospitalMapper, Hospital> i
         Hospital hospital = new Hospital();
         if (StringUtils.isEmpty(dto.getId())){
             hospital.setId(idWorker.nextId()+"");
+            //判断医院是否存在
+            Integer count =  baseMapper.selectCountWithName(dto.getName());
+            if (count > 0 ){
+                throw  new ResponseCommonException("医院信息已存在,请勿重新添加");
+            }
+
         }else{
             hospital.setId(dto.getId());
         }

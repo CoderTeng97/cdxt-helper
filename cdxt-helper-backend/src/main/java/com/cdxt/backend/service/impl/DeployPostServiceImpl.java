@@ -142,6 +142,19 @@ public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployP
         ZipUtil.pack(new File(svnTempDir + "/" + patchId), outputStream);
     }
 
+    @Override
+    public Boolean setDUser(String deployPostId,String dUid) {
+        DeployPost deployPost = new DeployPost();
+        deployPost.setId(deployPostId);
+        deployPost.setDUid(dUid);
+        Boolean isUpdate = this.updateById(deployPost);
+        if(isUpdate){
+            deployPost = this.getById(deployPostId);
+            sendNoticMail(deployPost);
+        }
+        return isUpdate;
+    }
+
 
     /**
      * 发送补丁通知邮件

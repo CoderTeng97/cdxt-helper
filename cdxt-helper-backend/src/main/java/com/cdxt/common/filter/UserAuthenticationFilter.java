@@ -33,9 +33,9 @@ public class UserAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+        //log.info(httpServletRequest.getRemoteUser() + "请求地址：" + httpServletRequest.getRequestURI());
         /**用户凭证检查*/
         String token = httpServletRequest.getHeader("X-Token");
-        log.info("请求地址：" + httpServletRequest.getRequestURI());
         try {
             if (StringUtils.isEmpty(token)) {
                 FilterResponseUtil.response("无效的登录凭证", HttpStatus.FORBIDDEN);

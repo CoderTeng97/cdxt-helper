@@ -42,4 +42,12 @@ public interface DeployPostService extends IService<DeployPost> {
 
 
     void getDeployPatchesWithZip(String patchId,OutputStream outputStream);
+
+    /**
+     * 设置处理人员
+     * @param deployPostId 问题id
+     * @param dUid 处理人员id
+     * @return
+     */
+    Boolean setDUser(String deployPostId,String dUid);
 }

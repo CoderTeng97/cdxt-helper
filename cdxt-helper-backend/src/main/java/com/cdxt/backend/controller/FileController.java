@@ -43,6 +43,7 @@ public class FileController extends BaseController {
 
     @PostMapping("/upload")
     public UploadFileResponseVO  uploadFile(@RequestParam("file") MultipartFile file){
+        log.info("文件进行上传" + file.getOriginalFilename());
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
         String fileName = idWorker.nextId() + "."  + suffix;
         try {

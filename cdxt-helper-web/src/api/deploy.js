@@ -54,7 +54,7 @@ export function getHospital(param) {
    */
   export function saveAndUpdateHospital(data) {
     return request({
-      url: '/api/deploy/savaOrUpdateHospital',
+      url: '/api/common/savaOrUpdateHospital',
       method: 'post',
       data:data
     })
@@ -71,3 +71,16 @@ export function getHospital(param) {
       method: 'get',
     })
   }
+
+  /**
+   *  下载补丁
+   * @param {*} data 
+   */
+  export function designateDUser(params) {
+    return request({
+      url: '/api/deploy/setDUser',
+      method: 'get',
+      params:params
+    })
+  }
+  

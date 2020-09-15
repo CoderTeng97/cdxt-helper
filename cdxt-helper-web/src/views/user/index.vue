@@ -179,7 +179,7 @@ export default {
 
       //修改弹框
       //用户权限
-      branchList: ["ADMIN", "IMPLEMENTER", "DEVELOPER","AFTERSAFE"],
+      branchList: ["ADMIN", "IMPLEMENTER", "DEVELOPER","AFTERSAFE","DEPLOYER"],
       moduleList: [
         { label: "住院", value: "1" },
         { label: "护士", value: "2" },

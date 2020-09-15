@@ -48,7 +48,7 @@ public class DeployController extends BaseController {
     public  ResponseListVO  list(@RequestBody DeployPostQueryDTO deployPostQueryDTO){
         UserBaseVO userBaseVO = getUserInfo();
         UserRole userRole = UserRole.valueOf(userBaseVO.getRole().toUpperCase());
-        if (UserRole.ADMIN.equals(userRole)){
+        if (UserRole.ADMIN.equals(userRole)|| UserRole.DEPLOYER.equals(userRole)){
             //TODO
         }else{
             deployPostQueryDTO.setUid(userBaseVO.getId());
@@ -84,6 +84,19 @@ public class DeployController extends BaseController {
             log.error("补丁下载发生异常",e);
             throw  new ResponseCommonException(HttpStatus.INTERNAL_SERVER_ERROR,"补丁下载发生IO异常");
         }
+    }
+
+
+    @ApiOperation("设置处理人员")
+    @GetMapping("/setDUser")
+    public Boolean setDUser(
+            @RequestParam
+            String duid,
+            @RequestParam
+            String deployPostId
+
+    ){
+      return   deployPostService.setDUser(deployPostId,duid);
     }
 
 

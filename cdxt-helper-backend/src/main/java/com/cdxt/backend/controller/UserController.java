@@ -149,6 +149,10 @@ public class UserController extends BaseController {
      */
     @PutMapping("/update")
     public Boolean update(@RequestBody  UserUpdateDTO dto){
+        UserBaseVO userBaseVO = getUserInfo();
+        if(!UserRole.ADMIN.equals(UserRole.valueOf(userBaseVO.getRole()))){
+            throw  new ResponseCommonException("您不是管理员，不具备修改用户权限");
+        }
         User user = userConvert.updateParams2Entity(dto);
         return  userService.updateById(user);
     }

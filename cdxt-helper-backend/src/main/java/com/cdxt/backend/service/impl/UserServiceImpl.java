@@ -81,7 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public List<Map<String,Object>>  getUserList(String trueName,String role) {
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq(StringUtils.isNotEmpty(role),"role",role)
-                .likeLeft(StringUtils.isNotEmpty(trueName),"true_name",trueName)
+                .like(StringUtils.isNotEmpty(trueName),"true_name",trueName)
                 .select("id","true_name");
        return  baseMapper.selectMaps(wrapper);
     }
