@@ -6,6 +6,76 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "1327070",
+      "name": "修改信息",
+      "font_class": "icon-xiugai",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "2437185",
+      "name": "更新",
+      "font_class": "icon-test",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "3020028",
+      "name": "二级-安全补丁",
+      "font_class": "erji-anquanbuding",
+      "unicode": "eaaa",
+      "unicode_decimal": 60074
+    },
+    {
+      "icon_id": "3756771",
+      "name": "符号-部署",
+      "font_class": "bushu",
+      "unicode": "e766",
+      "unicode_decimal": 59238
+    },
+    {
+      "icon_id": "3860381",
+      "name": "研究问题",
+      "font_class": "dabianyanjiuwenti",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "8312095",
+      "name": "列表",
+      "font_class": "liebiao",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "8790631",
+      "name": "售后服务-01",
+      "font_class": "shouhoufuwu-",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "8947848",
+      "name": "分支机构",
+      "font_class": "ziyuan1",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "12896508",
+      "name": "流程部署",
+      "font_class": "liuchengbushu",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "16049974",
+      "name": "虚拟补丁",
+      "font_class": "ziyuan1572",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
       "icon_id": "7017749",
       "name": "校验保存",
       "font_class": "xiaoyanbaocun",

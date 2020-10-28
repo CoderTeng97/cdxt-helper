@@ -79,7 +79,7 @@ public class DeployViewVO {
      */
     private String vUid;
 
-    private List<DeploySrcViewVO> fileSrcList;
+    private String detail;
 
     public void setdUsername(String dUsername) {
         this.dUsername = dUsername;

@@ -51,6 +51,11 @@ public class DeployPost implements Serializable {
     private String remark;
 
     /**
+     *补丁详情
+     */
+    private String detail;
+
+    /**
      * 0 一般 1 紧急
      */
     private Integer postLevel;

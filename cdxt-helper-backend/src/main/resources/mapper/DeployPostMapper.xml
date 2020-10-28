@@ -13,6 +13,7 @@
         <result column="state" property="state"/>
         <result column="d_uid" property="dUid"></result>
         <result column="p_uid" property="pUid"></result>
+        <result column="detail" property="detail"></result>
 
     </resultMap>
 
@@ -22,7 +23,7 @@
     </sql>
 
     <sql id="View_List_Cols">
-      dp.*,pu.true_name as p_username,du.true_name as d_username ,h.name as hospital_name,tdps.id as tdps_id ,tdps.src
+      dp.*,pu.true_name as p_username,du.true_name as d_username ,h.name as hospital_name
     </sql>
     <sql id="View_List_ConditionSQL">
 
@@ -32,10 +33,6 @@
         <result column="p_username" property="pUsername"></result>
         <result column="hospital_name" property="hospitalName"></result>
         <result column="post_level" property="postLevel"></result>
-        <collection property="fileSrcList" ofType="com.cdxt.backend.pojo.vo.DeploySrcViewVO">
-            <id column="tdps_id" property="id"></id>
-            <result column="src" property="src"></result>
-        </collection>
     </resultMap>
     <select id="selectPageByQueryDTO" resultMap="ListViewMap">
         select
@@ -44,7 +41,6 @@
         left join tb_user du on du.id = dp.d_uid
         left join tb_user pu on pu.id = dp.p_uid
         left join tb_hospital h on dp.hospital_id = h.id
-        left join tb_deploy_post_src tdps on tdps.pid = dp.id
         where dp.id in(
         select dp_temp.id from (
         select
@@ -72,9 +68,11 @@
         limit ${(dto.pageNum-1)*dto.pageSize},#{dto.pageSize}
         ) dp_temp)
         ORDER BY
+        gmt_create DESC,
         state ASC,
-        post_level DESC,
-        gmt_create DESC
+        post_level DESC
+
+
 
     </select>
     <select id="selectCountPageByQueryDTO" resultType="long">

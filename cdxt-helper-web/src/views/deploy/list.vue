@@ -48,12 +48,7 @@
             <template slot-scope="props">
               <el-form label-position="top" class="demo-table-expand">
                 <el-form-item label="更新路径">
-                  <span
-                    class="value"
-                    v-for="arr in props.row.fileSrcList"
-                    :key="arr.id"
-                    style="display: block;"
-                  >{{arr.src}}</span>
+                  <p  v-html="props.row.detail" style="line-height: 25px;"></p>
                 </el-form-item>
                 <el-form-item label="备注">
                   <div v-html="props.row.remark"></div>
@@ -90,7 +85,7 @@
 
           <el-table-column align="center" prop="created_at" label="发布时间">
             <template slot-scope="scope">
-              <span>{{$moment(scope.row.gmtCreate).format('YYYY-MM-DD HH:MM:SS')}}</span>
+              <span>{{$moment(scope.row.gmtCreate).format('YYYY-MM-DD HH:mm:ss')}}</span>
             </template>
           </el-table-column>
 

@@ -5,13 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdxt.backend.dao.DeployPostMapper;
 import com.cdxt.backend.model.DeployPost;
-import com.cdxt.backend.model.DeployPostSrc;
 import com.cdxt.backend.pojo.dto.DeployPostDTO;
 import com.cdxt.backend.pojo.dto.DeployPostQueryDTO;
 import com.cdxt.backend.pojo.vo.DeployViewVO;
 import com.cdxt.backend.service.DeployPostService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cdxt.backend.service.DeployPostSrcService;
 import com.cdxt.backend.service.SMSService;
 import com.cdxt.backend.service.UserService;
 import com.cdxt.common.enums.MailType;
@@ -29,7 +27,6 @@ import org.zeroturnaround.zip.ZipUtil;
 import java.io.File;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,8 +42,6 @@ import java.util.List;
 public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployPost> implements DeployPostService {
     @Autowired
     IdWorker idWorker;
-    @Autowired
-    DeployPostSrcService deployPostSrcService;
     @Autowired
     SMSService smsService;
     @Autowired
@@ -78,28 +73,10 @@ public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployP
         entity.setIsFullyDeploy(deployPostDTO.getIsFullyDeploy());
         entity.setPUid(deployPostDTO.getPUid());
         entity.setDUid(deployPostDTO.getDUid());
-        //校验路径是否存在 TODO
-        //String srcTempPrifix = entity.getBranch().trim().equals("master") ? masterSrcPrifix : branchSrcPrifix + entity.getBranch();
-        //进行路径的关联设置
-        List<DeployPostSrc> srcList = new ArrayList<>();
+        entity.setDetail(deployPostDTO.getDetail());
         try {
-            for (int i = 0; i < deployPostDTO.getFileSrcList().size(); i++) {
-                String tempSrc = deployPostDTO.getFileSrcList().get(i);
-                //判断路径是否在SVN中存在
-                //svnUtil.downloadFile("svn://" + svnClientIp + srcTempPrifix, "/" + tempSrc, svnTempDir + '/' + entity.getId());
-                DeployPostSrc src = new DeployPostSrc();
-                src.setPid(entity.getId());
-                src.setSrc("\\" + tempSrc);
-                srcList.add(src);
-            }
-            //生成压缩包到文件服务器
-//            File svnTempFile = new File(svnTempDir + "/" + entity.getId());
-//            ZipUtil.pack(svnTempFile, new File(svnTempDir + "/" + entity.getId() + ".zip"));
-//            svnTempFile.deleteOnExit();
-            //FIXME 此处会出现事务不一致性，需测试并做事务处理
-            boolean insertFlag = deployPostSrcService.saveBatch(srcList);
             int insertCount = baseMapper.insert(entity);
-            if (insertFlag == true && insertCount == 1) {
+            if (insertCount == 1) {
                 isPost = true;
                 sendNoticMail(entity);
             } else {
@@ -108,16 +85,13 @@ public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployP
         } catch (ResponseCommonException e) {
             throw new ResponseCommonException(e.getHttpStatus(), e.getMessage());
         } catch (Exception e) {
-            log.error("补丁发布西信息失败", e);
+            log.error("补丁发布信息失败", e);
             throw new ResponseCommonException(HttpStatus.INTERNAL_SERVER_ERROR, "发布信息失败");
         }
         return isPost;
     }
 
 
-    void generateDeployPostZIP(List<DeployPostSrc> deployPostSrcList) {
-
-    }
 
 
     @Override

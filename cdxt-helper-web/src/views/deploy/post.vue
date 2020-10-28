@@ -81,6 +81,12 @@
             <el-input type="textarea" v-model="form.remark" :autosize="{ minRows: 5, maxRows: 5}"></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="" prop="remark">
+            <el-link type="danger" disabled>Ps:补丁发布不对发布用户提供修改功能,如需修改请联系相应部署人员!</el-link>
+          </el-form-item>
+          
+        </el-col>
 
         <el-col :span="24">
           <el-form-item>
@@ -115,7 +121,7 @@ export default {
         branch: "",
         remark: "",
         postLevel: "0",
-        fileSrcList: [], //补丁路径列表
+        detail: "", //补丁路径列表
         dUid: "" //处理补丁用户
       },
       tempForm: {
@@ -189,24 +195,20 @@ export default {
       this.form.hospitalId = this.tempForm.hospital.id;
       this.form.branch = this.tempForm.hospital.branch;
       //处理路径
-      let tempFileSrcList = new Array();
+      this.form.detail = this.tempForm.fileSrc +"<br/>";
       for (var item in this.tempForm.fileSrcList) {
-        tempFileSrcList.push(this.tempForm.fileSrcList[item].src);
+        this.form.detail +=  this.tempForm.fileSrcList[item].src + "<br/>";
       }
-      tempFileSrcList.push(this.tempForm.fileSrc);
-      console.log(tempFileSrcList);
-      this.form.fileSrcList = tempFileSrcList;
       let res = await deployPost(this.form);
+      this.postLoading = false;
       if (res) {
         this.$message({
           message: "上传成功！",
           type: "success"
         });
         this.resetForm("form");
-         this.postLoading = false;
       } else {
         this.$message("上传失败");
-        this.postLoading = false;
       }
     },
     /**

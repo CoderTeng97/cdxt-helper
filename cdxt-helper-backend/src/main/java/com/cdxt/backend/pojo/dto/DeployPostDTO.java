@@ -56,7 +56,7 @@ public class DeployPostDTO {
     /**
      * 补丁路径
      */
-    private List<String> fileSrcList;
+    private String detail;
 
     public void setpUid(String pUid) {
         this.pUid = pUid;

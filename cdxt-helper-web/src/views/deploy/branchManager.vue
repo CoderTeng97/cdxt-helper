@@ -45,10 +45,17 @@
               </el-input>
             </template>
             <template slot-scope="scope">
-              <i class="iconfont icon-fabu1" @click="showBranchDialog('update',scope.row)"></i>
-              <i class="iconfont icon-shujuku"></i>
+              <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="修改"
+                    placement="top-start"
+                  >
+              <i class="iconfont icon-icon-xiugai" @click="showBranchDialog('update',scope.row)"></i>
+              </el-tooltip>
+              <!-- <i class="iconfont icon-shujuku"></i>
               <i class="iconfont icon-aistubiaozhizuo--copy"></i>
-              <i class="iconfont icon-xianchangrenyuanweihu-copy"></i>
+              <i class="iconfont icon-xianchangrenyuanweihu-copy"></i> -->
                <!--<el-button
                 size="mini"
                 type="danger"
@@ -75,8 +82,7 @@
         </el-pagination>
       </el-col>
       <el-col>
-         <i class="iconfont icon-xinzeng" @click="showBranchDialog('post',null)" style="color: #66b1ff;">
-         </i>
+         <el-button type="primary"  size="mini" icon="el-icon-plus" @click="showBranchDialog('post',null)">新增</el-button>
       </el-col>
     </el-row>
 
