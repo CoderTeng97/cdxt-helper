@@ -84,7 +84,7 @@
 
         <el-col :span="24">
           <el-form-item>
-            <el-button type="primary" @click="onSubmit('form')">发布</el-button>
+            <el-button type="primary" @click="onSubmit('form')" :loading="postLoading">发布</el-button>
             <el-button @click="resetForm">清空</el-button>
           </el-form-item>
         </el-col>
@@ -109,6 +109,7 @@ export default {
 
     return {
       loading: false,
+      postLoading:false,//发布加载
       form: {
         hospitalId: "",
         branch: "",
@@ -183,6 +184,7 @@ export default {
     },
 
     async post() {
+      this.postLoading = true;
       //处理分支
       this.form.hospitalId = this.tempForm.hospital.id;
       this.form.branch = this.tempForm.hospital.branch;
@@ -201,8 +203,10 @@ export default {
           type: "success"
         });
         this.resetForm("form");
+         this.postLoading = false;
       } else {
         this.$message("上传失败");
+        this.postLoading = false;
       }
     },
     /**
