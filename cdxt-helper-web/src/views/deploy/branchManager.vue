@@ -40,7 +40,7 @@
 
           <el-table-column align="left">
             <template slot="header" slot-scope="scope">
-              <el-input  v-model="rparams.text" size="medium" placeholder="输入关键字搜索"  >
+              <el-input  v-model="rparams.text" size="medium" placeholder="输入关键字搜索"  @keyup.enter.native="fetchData">
                  <el-button slot="append" icon="el-icon-search" @click="fetchData"></el-button>
               </el-input>
             </template>
