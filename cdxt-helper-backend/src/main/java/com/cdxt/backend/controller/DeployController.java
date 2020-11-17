@@ -53,6 +53,7 @@ public class DeployController extends BaseController {
         }else{
             deployPostQueryDTO.setUid(userBaseVO.getId());
         }
+        deployPostQueryDTO.setUserRole(userRole.name());
         IPage<DeployViewVO> iPage = deployPostService.getDeployViewList(deployPostQueryDTO);
         ResponseListVO<DeployViewVO> vo = new ResponseListVO<>(iPage.getCurrent(),iPage.getSize(),iPage.getTotal(),iPage.getRecords());
         return vo ;
@@ -97,6 +98,13 @@ public class DeployController extends BaseController {
 
     ){
       return   deployPostService.setDUser(deployPostId,duid);
+    }
+
+
+    @ApiOperation("修改状态")
+    @PostMapping("/del")
+    public Boolean del(@RequestParam String id){
+        return deployPostService.delPost(id);
     }
 
 

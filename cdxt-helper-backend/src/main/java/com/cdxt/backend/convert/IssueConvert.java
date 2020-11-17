@@ -21,7 +21,6 @@ public interface  IssueConvert {
             @Mapping(target ="gmtCreate" ,ignore = true),
             @Mapping(target ="isDel" ,ignore = true),
             @Mapping(target ="id" ,ignore = true)
-
     })
     Issues postParams2Entity (IssuesPostDTO issuesPostDTO);
     Issues updateParams2Entity(IssuesUpdateDTO issuesUpdateDTO);

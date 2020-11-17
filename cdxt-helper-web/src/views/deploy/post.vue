@@ -56,9 +56,10 @@
 
         <el-col :span="24">
           <el-form-item label="紧急程度" prop="postLevel">
-            <el-select v-model="form.postLevel" placeholder="请选择活动区域">
+            <el-select v-model="form.postLevel" placeholder="请选择紧急程度">
               <el-option label="一般" value="0"></el-option>
               <el-option label="紧急" value="1"></el-option>
+              <el-option label="弱" value="2"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -82,7 +83,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="" prop="remark">
+          <el-form-item label="">
             <el-link type="danger" disabled>Ps:补丁发布不对发布用户提供修改功能,如需修改请联系相应部署人员!</el-link>
           </el-form-item>
           
@@ -139,6 +140,9 @@ export default {
         ],
         dUid: [
           { required: true, message: '请选择处理人员', trigger: 'change' }
+        ],
+        remark: [
+          { required: true, message: '备注不能为空', trigger: 'blur' }
         ]
       } //校验规则
     };

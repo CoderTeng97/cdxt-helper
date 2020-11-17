@@ -20,7 +20,7 @@ public class JwtTokenUtil implements Serializable {
      * 过期时间
      */
     @Value("${jwt.config.expiration}")
-    public long expiration;
+    public Long expiration;
     /**
      * JWT密码
      */

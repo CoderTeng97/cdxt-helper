@@ -47,7 +47,7 @@
         id
         from tb_deploy_post
         <where>
-            1 = 1
+            is_del = 0
             <if test="dto.hospitalId != null and dto.hospitalId != '' ">
                 and hospital_id = #{dto.hospitalId}
             </if>
@@ -61,24 +61,42 @@
                 and (d_uid = #{dto.uid} or p_uid = #{dto.uid})
             </if>
         </where>
-        ORDER BY
-        state ASC,
-        post_level DESC,
-        gmt_create DESC
+        <choose>
+            <when test='dto.userRole == "DEPLOYER"'>
+                ORDER BY
+                state ASC,
+                gmt_create DESC,
+                post_level DESC
+            </when>
+            <otherwise>
+                ORDER BY
+                gmt_create DESC,
+                state ASC,
+                post_level DESC
+            </otherwise>
+        </choose>
         limit ${(dto.pageNum-1)*dto.pageSize},#{dto.pageSize}
         ) dp_temp)
-        ORDER BY
-        gmt_create DESC,
-        state ASC,
-        post_level DESC
-
-
+    <choose>
+        <when test='dto.userRole == "DEPLOYER"'>
+            ORDER BY
+            state ASC,
+            gmt_create DESC,
+            post_level DESC
+        </when>
+        <otherwise>
+            ORDER BY
+            gmt_create DESC,
+            state ASC,
+            post_level DESC
+        </otherwise>
+    </choose>
 
     </select>
     <select id="selectCountPageByQueryDTO" resultType="long">
         select count(1) from tb_deploy_post dp
         <where>
-            1 = 1
+            is_del = 0
             <if test="dto.hospitalId != null and dto.hospitalId != '' ">
                 and dp.hospital_id = #{dto.hospitalId}
             </if>

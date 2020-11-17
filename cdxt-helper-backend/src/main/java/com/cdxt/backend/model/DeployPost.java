@@ -71,7 +71,7 @@ public class DeployPost implements Serializable {
     private Integer isFullyDeploy;
 
     /**
-     * 0 未处理 1 处理 2 待确认 3 失败 4 发布完成
+     * 0 未处理 1 处理中 2 驳回 3 处理完成
      */
     private Integer state;
 
@@ -99,6 +99,8 @@ public class DeployPost implements Serializable {
      * 创建时间
      */
     private LocalDateTime gmtCreate;
+
+    private Integer isDel;
 
 
 }

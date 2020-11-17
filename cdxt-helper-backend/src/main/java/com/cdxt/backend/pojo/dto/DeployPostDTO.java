@@ -24,7 +24,7 @@ public class DeployPostDTO {
     private String remark;
 
     /**
-     * 0 一般 1 紧急
+     * 0 一般 1 紧急 2 不紧急
      */
     private Integer postLevel;
 

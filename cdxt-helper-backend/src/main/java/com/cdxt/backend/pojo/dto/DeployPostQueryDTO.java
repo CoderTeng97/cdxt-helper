@@ -29,8 +29,10 @@ public class DeployPostQueryDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "发布结束时间",required = false)
     private LocalDateTime postEndTime;
-    @ApiModelProperty(value = "用户id",required = false)
+    @ApiModelProperty(value = "用户id",hidden =  true)
     private String uid;
+    @ApiModelProperty(value = "用户权限",hidden =  true)
+    private String userRole;
 
     public void setHospitalId(String hospitalId) {
         this.hospitalId = hospitalId;

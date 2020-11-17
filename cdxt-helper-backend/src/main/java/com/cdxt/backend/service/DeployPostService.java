@@ -50,4 +50,11 @@ public interface DeployPostService extends IService<DeployPost> {
      * @return
      */
     Boolean setDUser(String deployPostId,String dUid);
+
+    /**
+     * 删除补丁
+     * @param id
+     * @return
+     */
+    Boolean delPost(String id);
 }

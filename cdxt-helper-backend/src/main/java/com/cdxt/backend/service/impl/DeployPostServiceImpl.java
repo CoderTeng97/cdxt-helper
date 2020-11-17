@@ -156,5 +156,11 @@ public class DeployPostServiceImpl extends ServiceImpl<DeployPostMapper, DeployP
 
     }
 
-
+    @Override
+    public Boolean delPost(String id) {
+        DeployPost post = new DeployPost();
+        post.setId(id);
+        post.setIsDel(1);
+        return baseMapper.updateById(post) > 0? true : false;
+    }
 }

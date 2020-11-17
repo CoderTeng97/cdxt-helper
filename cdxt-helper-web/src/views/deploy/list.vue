@@ -8,6 +8,7 @@
           v-model="hospital"
           filterable
           remote
+          clearable
           reserve-keyword
           placeholder="请输入医院关键词搜索"
           :remote-method="searchHospital"
@@ -70,8 +71,8 @@
           <el-table-column class-name="status-col" label="紧急程度" align="center">
             <template slot-scope="scope">
               <el-tag
-                :type="scope.row.postLevel == 0 ? 'primary' : 'danger'"
-              >{{ scope.row.postLevel ==0 ? '一般':'紧急' }}</el-tag>
+                :type="formatPostLevel(scope.row.postLevel)"
+              >{{ formatPostLevelText(scope.row.postLevel) }}</el-tag>
             </template>
           </el-table-column>
 
@@ -91,15 +92,25 @@
 
           <el-table-column class-name="status-col" label="处理情况" align="center">
             <template slot-scope="scope">
-              <el-tag
-                :type="scope.row.state == 0 ? 'primary' : 'success'"
-              >{{ scope.row.state ==0 ? '未处理':'已处理' }}</el-tag>
+              <el-tag :type="formatStatus(scope.row.state)">{{ formatStatusText(scope.row.state)}}</el-tag>
             </template>
           </el-table-column>
 
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-tooltip
+                <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="开始处理 "
+                    placement="top-start"
+                     v-if="scope.row.state == 0 && uid ==scope.row.duid"
+                  >
+                    <i
+                      class="iconfont icon-xiaoyan"
+                      @click="stateClickEvent(scope.$index, scope.row,1)"
+                    ></i>
+                  </el-tooltip>
+                  <el-tooltip
                     class="item"
                     effect="dark"
                     content="指派"
@@ -117,11 +128,24 @@
                     effect="dark"
                     content="完成"
                     placement="top-start"
+                     v-if="scope.row.state == 1 && uid ==scope.row.duid"
+                  >
+                    <i
+                      class="iconfont icon-wanchenggongzuo"
+                      @click="stateClickEvent(scope.$index, scope.row,2)"
+                    ></i>
+                  </el-tooltip>
+
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="废弃"
+                    placement="top-start"
                      v-if="scope.row.state == 0 && uid ==scope.row.duid"
                   >
                     <i
-                      class="iconfont icon-wancheng5"
-                      @click="stateClickEvent(scope.$index, scope.row)"
+                      class="iconfont icon-shanchu"
+                      @click="stateClickEvent(scope.$index, scope.row,3)"
                     ></i>
                   </el-tooltip>
               <!-- <el-button v-if="scope.row.state == 0" type="" size="mini" @click="downloadPatches(scope.row)">下载补丁</el-button> -->
@@ -178,6 +202,7 @@ export default {
   },
   data() {
     return {
+      intervalId: null,//定时Id
       dUserSetDialogVisible:false,//处理人员设置
       designatedUserParams:{
         duid:'',//处理用户id
@@ -231,20 +256,7 @@ export default {
     };
   },
   filters: {
-    statusFilter(status) {
-      console.log("dsf" + status);
-      let statusMap = null;
-      if (status == 0) {
-        statusMap = {
-          type: "danger",
-        };
-      } else {
-        statusMap = {
-          type: "info",
-        };
-      }
-      return statusMap[status];
-    },
+    
   },
   // postLevelFilter(level) {
   //   let statusMap = null;
@@ -264,6 +276,7 @@ export default {
   // },
   created() {
     this.fetchData();
+    this.dataRefreh();
   },
   computed: {
      ...mapGetters({
@@ -273,7 +286,82 @@ export default {
       token: "token"
     }),
   },
+  destroyed(){
+    // 在页面销毁后，清除计时器
+    this.clear();
+  },
+  
   methods: {
+    /**
+     * 定时刷新页面
+     */
+    dataRefreh() {
+      // 计时器正在进行中，退出函数
+      if (this.intervalId != null) {
+        return;
+      }
+      // 计时器为空，操作
+      this.intervalId = setInterval(() => {
+        console.log("刷新" + new Date());
+        this.getDeployList();
+      }, 60000);
+    }, 
+    // 停止定时器
+    clear() {
+      clearInterval(this.intervalId); //清除计时器
+      this.intervalId = null; //设置为null
+    },
+    /**
+     * 表格状态处理方法
+     */
+    formatStatus(status) {
+      console.log("状态" + status)
+      let tagType = 'danger';
+      switch(status){
+        case 0 : tagType='';break;
+        case 1 : tagType='warning';break;
+        case 2 : tagType='success';break;
+        case 3 : tagType='info';break;
+        default :tagType='';
+      }
+      return tagType;
+    },
+    formatStatusText(status) {
+      let tagText = '';
+      switch(status){
+        case 0 : tagText='未处理';break;
+        case 1 : tagText='处理中';break;
+        case 2 : tagText='已处理'; break;
+        case 3 : tagText='已废弃'; break;
+        default :tagText='';
+      }
+      return tagText;
+    },
+
+    /**
+     * 表格发布等级处理方法 
+     */
+    formatPostLevel(status) {
+      let tagType = 'danger';
+      switch(status){
+        case 0 : tagType='';break;
+        case 1 : tagType='danger';break;
+        case 2 : tagType='warning';break;
+        default :tagType='';
+      }
+      return tagType;
+    },
+    formatPostLevelText(status) {
+      console.log("状态" + status)
+      let tagText = '';
+      switch(status){
+        case 0 : tagText='一般';break;
+        case 1 : tagText='紧急';break;
+        case 2 : tagText='弱'; break;
+        default :tagText='';
+      }
+      return tagText;
+    },
     /**
      * 下载补丁
      */
@@ -287,10 +375,10 @@ export default {
       this.getDeployList();
       this.listLoading = false;
     },
-    stateClickEvent(index, row) {
+    stateClickEvent(index, row,status) {
       console.log(row);
       //设置已处理
-      this.updateState(row.id, 1);
+      this.updateState(row.id, status);
     },
     /**
      * 获取部署列表
