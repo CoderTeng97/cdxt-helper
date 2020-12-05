@@ -57,9 +57,10 @@
         <el-col :span="24">
           <el-form-item label="紧急程度" prop="postLevel">
             <el-select v-model="form.postLevel" placeholder="请选择紧急程度">
+              <el-option label="弱" value="2"></el-option>
               <el-option label="一般" value="0"></el-option>
               <el-option label="紧急" value="1"></el-option>
-              <el-option label="弱" value="2"></el-option>
+              
             </el-select>
           </el-form-item>
         </el-col>
@@ -79,12 +80,12 @@
 
         <el-col :span="15" :xs="24">
           <el-form-item label="备注(功能说明)" prop="remark">
-            <el-input type="textarea" v-model="form.remark" :autosize="{ minRows: 5, maxRows: 5}"></el-input>
+            <el-input type="textarea"   v-model="form.remark"  :autosize="{ minRows: 5, maxRows: 5}"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24">
           <el-form-item label="">
-            <el-link type="danger" disabled>Ps:补丁发布不对发布用户提供修改功能,如需修改请联系相应部署人员!</el-link>
+            <el-link type="danger" disabled>Ps:补丁发布不对发布用户提供修改删除功能,如果补丁处于未处理状态用户可进行废弃补丁操作，则补丁不再发布！</el-link>
           </el-form-item>
           
         </el-col>
@@ -121,7 +122,7 @@ export default {
         hospitalId: "",
         branch: "",
         remark: "",
-        postLevel: "0",
+        postLevel: "2",
         detail: "", //补丁路径列表
         dUid: "" //处理补丁用户
       },

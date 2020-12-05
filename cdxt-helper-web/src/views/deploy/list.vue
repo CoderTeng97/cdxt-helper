@@ -276,7 +276,6 @@ export default {
   // },
   created() {
     this.fetchData();
-    this.dataRefreh();
   },
   computed: {
      ...mapGetters({
@@ -287,8 +286,7 @@ export default {
     }),
   },
   destroyed(){
-    // 在页面销毁后，清除计时器
-    this.clear();
+
   },
   
   methods: {
