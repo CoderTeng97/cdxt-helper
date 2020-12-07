@@ -153,6 +153,39 @@ export const commonRoutes1 = [
       }
     ]
   },
+	{
+	  path: '/template',
+	  component: Layout,
+	  meta: { title: '代码生成工具', icon: 'liebiao', },
+	  children: [
+	    {
+	      path: 'config',
+	      name: 'Config',
+	      component: () => import('../views/codeGen/generate/index.vue'),
+	      meta: { title: '生成代码', icon: 'liebiao',  },
+	    },
+		{
+		  path: 'list',
+		  name: 'List',
+		   component: () => import('../views/codeGen/template/index.vue'),
+		  meta: { title: '模板管理', icon: 'liebiao',  },
+		},
+		{
+			path: 'result/:config',
+			name: 'Result',
+			component: () => import('../views/codeGen/generate/result.vue'),
+			meta: { title: '生成结果' },
+			hidden: true
+		 },
+		 {
+			path: 'edit/:id(\\d+)',
+			name: 'Edit',
+			component: () => import('../views/codeGen/template/edit.vue'),
+			meta: { 'title': '编辑模板' },
+			hidden: true
+		}
+	  ]
+	},
 
   { path: '*', redirect: '/404', hidden: true }
  
