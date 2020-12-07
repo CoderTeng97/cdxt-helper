@@ -80,13 +80,15 @@
 </style>
 
 <script>
+import axios from 'axios'
 import { codemirror } from 'vue-codemirror'
 import 'codemirror/theme/neat.css'
 
 require('codemirror/mode/velocity/velocity')
 import {
   getTemplateById,
-	saveTemplate
+	saveTemplate,
+	getTemplateFile
 } from "../../../api/codeGen.js";
 export default {
   components: { codemirror },
@@ -123,15 +125,16 @@ export default {
       velocityConfig: [],
       defaultProps: {
         children: 'children',
-        label: 'text'
+        label: 'text',
       }
     }
   },
   created() {
     const id = this.$route.params.id || 0
     if (id > 0) {
-		 let resp = getTemplateById(id,{});
-		 this.formData = resp.data;
+		 let resp = getTemplateById(id,{}).then(res =>{
+				 this.formData = res;
+			});
     }
     this.loadVelocityVar()
   },
@@ -164,11 +167,12 @@ export default {
       this.$refs.dialogForm.validate((valid) => {
         if (valid) {
           const opt = this.formData.id ? 'update' : 'add'
-		  let resp = saveTemplate(opt,this.formData);
-		  if (opt === 'add') {
-		    this.formData.id = resp.data.id
-		  }
-		  this.tip('保存成功')
+		  let resp = saveTemplate(opt,this.formData).then(res =>{
+				if (opt === 'add') {
+				  this.formData.id = res.id
+				}
+				this.tip('保存成功')
+			});
         }
       })
     },
@@ -179,7 +183,67 @@ export default {
 	goRoute: function(path) {
 		console.log(path);
 		this.$router.push({ path: path })
-	}
+	},
+	tip: function(msg, type, stay) {
+	  stay = parseInt(stay) || 3
+	  this.$message({
+	    message: msg,
+	    type: type || 'success',
+	    duration: stay * 1000
+	  })
+	},
+	confirm: function(msg, okHandler, cancelHandler) {
+	  const that = this
+	  this.$confirm(msg, '提示', {
+	    confirmButtonText: '确定',
+	    cancelButtonText: '取消',
+	    type: 'warning',
+	    beforeClose: (action, instance, done) => {
+	      if (action === 'confirm') {
+	        okHandler.call(that, done)
+	      } else if (action === 'cancel') {
+	        if (cancelHandler) {
+	          cancelHandler.call(that, done)
+	        } else {
+	          done()
+	        }
+	      } else {
+	        done()
+	      }
+	    }
+	  }).catch(function() {})
+	},
+	/**
+	 * 重置表单
+	 * @param formName 表单元素的ref
+	 */
+	resetForm(formName) {
+	  const frm = this.$refs[formName]
+	  frm && frm.resetFields()
+	},
+	/**
+	 *  文件必须放在public下面
+	 * @param path 相对于public文件夹路径，如文件在public/static/sign.md，填：static/sign.md
+	 * @param callback 回调函数，函数参数是文件内容
+	 */
+	getFile: function(path, callback) {
+	  axios.get(path)
+	    .then(function(response) {
+	      callback.call(this, response.data)
+	    })
+	},
+	downloadText(filename, text) {
+	  const element = document.createElement('a')
+	  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+	  element.setAttribute('download', filename)
+	
+	  element.style.display = 'none'
+	  document.body.appendChild(element)
+	
+	  element.click()
+	
+	  document.body.removeChild(element);
+	},
   }
 }
 </script>

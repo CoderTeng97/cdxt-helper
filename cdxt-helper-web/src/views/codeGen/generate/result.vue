@@ -3,7 +3,7 @@
     <el-backtop />
     <div v-if="loading">生成中...</div>
     <div v-else>
-		 <el-button type="primary"><i class="el-icon-arrow-left el-icon--left"></i>选择数据源</el-button>
+		 <el-button type="primary" @click="goRoute('/template/config')"><i class="el-icon-arrow-left el-icon--left"></i>选择数据源</el-button>
       <el-container>
         <el-aside>
           <el-button
@@ -124,6 +124,7 @@ export default {
   },
   methods: {
     onGenerate() {
+		let self = this;
       if (this.clientParam.tableNames.length === 0) {
         this.tip('请勾选表', 'error')
         return
@@ -132,10 +133,12 @@ export default {
         this.tip('请勾选模板', 'error')
         return
       }
-		let resp = postGenerateCode(this.clientParam);
-		this.loading = false
-		const rows = resp.data
-		this.treeData = this.buildTreeData(rows)
+		let resp = postGenerateCode(this.clientParam).then(res =>{
+				self.loading = false;
+				const rows = res;
+				self.treeData = self.buildTreeData(rows)
+			});
+		
     },
     // 树搜索
     filterNode(value, data) {
@@ -143,6 +146,10 @@ export default {
       return data.fileName.toLowerCase().indexOf(value.toLowerCase()) !== -1
     },
     buildTreeData(rows) {
+		if(rows == null || rows == undefined){
+			 this.tip('暂无数据', 'error')
+			return false;
+		}
       const treeData = []
       const codeMap = {}
       // 把列表数据转换到map中,key为模板名
@@ -237,6 +244,81 @@ export default {
 	      this.clipboard.destroy()
 	    }
 	  },
+		confirm: function(msg, okHandler, cancelHandler) {
+		  const that = this
+		  this.$confirm(msg, '提示', {
+		    confirmButtonText: '确定',
+		    cancelButtonText: '取消',
+		    type: 'warning',
+		    beforeClose: (action, instance, done) => {
+		      if (action === 'confirm') {
+		        okHandler.call(that, done)
+		      } else if (action === 'cancel') {
+		        if (cancelHandler) {
+		          cancelHandler.call(that, done)
+		        } else {
+		          done()
+		        }
+		      } else {
+		        done()
+		      }
+		    }
+		  }).catch(function() {})
+		},
+		/**
+		 * 重置表单
+		 * @param formName 表单元素的ref
+		 */
+		resetForm(formName) {
+		  const frm = this.$refs[formName]
+		  frm && frm.resetFields()
+		},
+		/**
+		 *  文件必须放在public下面
+		 * @param path 相对于public文件夹路径，如文件在public/static/sign.md，填：static/sign.md
+		 * @param callback 回调函数，函数参数是文件内容
+		 */
+		downloadText(filename, text) {
+		  const element = document.createElement('a')
+		  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+		  element.setAttribute('download', filename)
+		
+		  element.style.display = 'none'
+		  document.body.appendChild(element)
+		
+		  element.click()
+		
+		  document.body.removeChild(element);
+		},
+		tip: function(msg, type, stay) {
+		  stay = parseInt(stay) || 3
+		  this.$message({
+		    message: msg,
+		    type: type || 'success',
+		    duration: stay * 1000
+		  })
+		},
+		confirm: function(msg, okHandler, cancelHandler) {
+		  const that = this
+		  this.$confirm(msg, '提示', {
+		    confirmButtonText: '确定',
+		    cancelButtonText: '取消',
+		    type: 'warning',
+		    beforeClose: (action, instance, done) => {
+		      if (action === 'confirm') {
+		        okHandler.call(that, done)
+		      } else if (action === 'cancel') {
+		        if (cancelHandler) {
+		          cancelHandler.call(that, done)
+		        } else {
+		          done()
+		        }
+		      } else {
+		        done()
+		      }
+		    }
+		  }).catch(function() {})
+		},
   }
 }
 </script>

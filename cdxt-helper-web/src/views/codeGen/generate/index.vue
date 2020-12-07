@@ -218,16 +218,20 @@ export default {
       return ''
     },
     loadDataSource() {
-      let res = getLoadDataSource({});
-      this.datasourceConfigList = res.data;
+      let res = getLoadDataSource({}).then(res =>{
+			this.datasourceConfigList = res;
+		});
+	
     },
     loadTemplate() {
-		let res = getLoadTemplate({});
-		this.templateListData = res.data;
+		let res = getLoadTemplate({}).then(res =>{
+			this.templateListData = res;
+		});
     },
     loadDbType() {
-		let res = getLoadDbType({});
-		this.dbTypeConfig = res.data;
+		let res = getLoadDbType({}).then(res =>{
+			this.dbTypeConfig = res;
+		});
     },
     onDataSourceAdd() {
       this.datasourceTitle = '新建连接'
@@ -244,9 +248,11 @@ export default {
     },
     onDataSourceChange(datasourceConfigId) {
 		this.clientParam.datasourceConfigId = datasourceConfigId
-	  	let res = postDataSourceChange(datasourceConfigId,{});
-		this.showTable = true
-		this.tableListData = res.data
+	  	let res = postDataSourceChange(datasourceConfigId,{}).then(res =>{
+			this.showTable = true;
+			this.tableListData = res;
+		});
+		
     },
     onDataSourceUpdate(item) {
       this.datasourceTitle = '修改连接'
@@ -264,9 +270,10 @@ export default {
         const data = {
           id: row.id
         }
-		let res = postDataSourceDelete(data);
-		done()
-		location.reload()
+		let res = postDataSourceDelete(data).then(res =>{
+			done()
+			location.reload()
+		});
       })
     },
     onGenerate() {
@@ -286,26 +293,34 @@ export default {
       })
     },
     onDatasourceTest() {
+		let self = this;
       this.$refs.datasourceForm.validate((valid) => {
         if (valid) {
-			let res = postDatasourceTest(this.datasourceFormData);
-			 this.tip('连接成功')
+			let res = postDatasourceTest(this.datasourceFormData).then(res =>{
+				self.tip('连接成功')
+			});
+			
         }
       })
     },
     onDatasourceSave() {
       this.$refs.datasourceForm.validate((valid) => {
         if (valid) {
-			let res = postDatasourceTest(this.datasourceFormData);
-			if (this.datasourceFormData.id) {
-				let res = datasourceUpdate(this.datasourceFormData);
-				location.reload()
-			} else {
-				let res = datasourceAdd(this.datasourceFormData);
-				this.tip('添加成功')
-				this.loadDataSource()
-				this.datasourceDlgShow = false
-			}
+			let res = postDatasourceTest(this.datasourceFormData).then(res =>{
+				if (this.datasourceFormData.id) {
+					let res = datasourceUpdate(this.datasourceFormData).then(res =>{
+						location.reload()
+					});
+				} else {
+					let res = datasourceAdd(this.datasourceFormData).then(res =>{
+						this.tip('添加成功')
+						this.loadDataSource()
+					});
+						this.datasourceDlgShow = false
+					
+				}
+			});
+			
         }
       })
     },
@@ -318,7 +333,44 @@ export default {
 	goRoute: function(path) {
 	    this.$router.push({ path: path })
 	  },
-  }
+	  tip: function(msg, type, stay) {
+	    stay = parseInt(stay) || 3
+	    this.$message({
+	      message: msg,
+	      type: type || 'success',
+	      duration: stay * 1000
+	    })
+	  },
+	  confirm: function(msg, okHandler, cancelHandler) {
+	    const that = this
+	    this.$confirm(msg, '提示', {
+	      confirmButtonText: '确定',
+	      cancelButtonText: '取消',
+	      type: 'warning',
+	      beforeClose: (action, instance, done) => {
+	        if (action === 'confirm') {
+	          okHandler.call(that, done)
+	        } else if (action === 'cancel') {
+	          if (cancelHandler) {
+	            cancelHandler.call(that, done)
+	          } else {
+	            done()
+	          }
+	        } else {
+	          done()
+	        }
+	      }
+	    }).catch(function() {})
+	  },
+	  /**
+	   * 重置表单
+	   * @param formName 表单元素的ref
+	   */
+	  resetForm(formName) {
+	    const frm = this.$refs[formName]
+	    frm && frm.resetFields()
+	  },
+  },
 }
 </script>
 

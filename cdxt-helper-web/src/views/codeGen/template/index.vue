@@ -44,18 +44,22 @@ export default {
   },
   methods: {
     loadTable: function() {
-		let resp = getTemplateList({});
-		 this.tableData = resp.data
+		let resp = getTemplateList({}).then(res =>{
+				 this.tableData = res;
+			});
+		
     },
     onTableUpdate: function(row) {
       this.goRoute(`edit/${row.id}`)
     },
     onTableDelete: function(row) {
       this.confirm(`确认要删除【${row.name}】吗？`, function(done) {
-		  let resp = deleteTemplate(row);
-		  done()
-		  this.tip('删除成功')
-		  this.loadTable()
+		  let resp = deleteTemplate(row).then(res =>{
+				 done()
+				 this.tip('删除成功')
+				 this.loadTable()
+			});
+		 
       })
     },
     onAdd: function() {
@@ -64,6 +68,55 @@ export default {
 	goRoute: function(path) {
 		console.log(path);
 		this.$router.push({ path: path })
+	},
+	tip: function(msg, type, stay) {
+	  stay = parseInt(stay) || 3
+	  this.$message({
+	    message: msg,
+	    type: type || 'success',
+	    duration: stay * 1000
+	  })
+	},
+	confirm: function(msg, okHandler, cancelHandler) {
+	  const that = this
+	  this.$confirm(msg, '提示', {
+	    confirmButtonText: '确定',
+	    cancelButtonText: '取消',
+	    type: 'warning',
+	    beforeClose: (action, instance, done) => {
+	      if (action === 'confirm') {
+	        okHandler.call(that, done)
+	      } else if (action === 'cancel') {
+	        if (cancelHandler) {
+	          cancelHandler.call(that, done)
+	        } else {
+	          done()
+	        }
+	      } else {
+	        done()
+	      }
+	    }
+	  }).catch(function() {})
+	},
+	/**
+	 * 重置表单
+	 * @param formName 表单元素的ref
+	 */
+	resetForm(formName) {
+	  const frm = this.$refs[formName]
+	  frm && frm.resetFields()
+	},
+	downloadText(filename, text) {
+	  const element = document.createElement('a')
+	  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
+	  element.setAttribute('download', filename)
+	
+	  element.style.display = 'none'
+	  document.body.appendChild(element)
+	
+	  element.click()
+	
+	  document.body.removeChild(element);
 	},
   }
 }
