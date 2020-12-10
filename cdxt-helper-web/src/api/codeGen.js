@@ -100,7 +100,7 @@ export function deleteTemplate(data) {
 
 export function getTemplateById(id,data) {
   return request({
-    url: http+'/api/codeGen/template/get/${'+id+'}',
+    url: http+'/api/codeGen/template/get/'+id,
     method: 'post',
     data:data
   })
@@ -108,7 +108,7 @@ export function getTemplateById(id,data) {
 
 export function saveTemplate(opt,data) {
   return request({
-    url: http+'/api/codeGen/template/${'+opt+'}',
+    url: http+'/api/codeGen/template/'+opt,
     method: 'post',
     data:data
   })
