@@ -88,7 +88,9 @@ require('codemirror/mode/velocity/velocity')
 import {
   getTemplateById,
 	saveTemplate,
-	getTemplateFile
+	getTemplateFile,
+	getJavaFile,
+	getCsharpFile
 } from "../../../api/codeGen.js";
 export default {
   components: { codemirror },
@@ -140,7 +142,7 @@ export default {
   },
   methods: {
     loadVelocityVar() {
-      this.getFile(`velocity/java.json?q=${new Date().getTime()}`, content => {
+      getJavaFile(new Date().getTime(), content => {
         this.velocityConfig.push({
           name: 'java',
           label: 'Java变量',
@@ -148,7 +150,7 @@ export default {
         })
         this.treeData = content.data
       })
-      this.getFile(`velocity/csharp.json?q=${new Date().getTime()}`, content => {
+      getCsharpFile(new Date().getTime(), content => {
         this.velocityConfig.push({
           name: 'csharp',
           label: 'C#变量',
@@ -220,17 +222,6 @@ export default {
 	resetForm(formName) {
 	  const frm = this.$refs[formName]
 	  frm && frm.resetFields()
-	},
-	/**
-	 *  文件必须放在public下面
-	 * @param path 相对于public文件夹路径，如文件在public/static/sign.md，填：static/sign.md
-	 * @param callback 回调函数，函数参数是文件内容
-	 */
-	getFile: function(path, callback) {
-	  axios.get(path)
-	    .then(function(response) {
-	      callback.call(this, response.data)
-	    })
 	},
 	downloadText(filename, text) {
 	  const element = document.createElement('a')

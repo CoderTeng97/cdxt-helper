@@ -6,7 +6,7 @@ let http = "";
 
 export function getLoadDataSource(data) {
   return request({
-    url: http+'/api/codeGen/datasource/list',
+    url: http+'/codeGen/datasource/list',
     method: 'post',
     data:data
   })
@@ -14,7 +14,7 @@ export function getLoadDataSource(data) {
 
 export function getLoadTemplate(data) {
   return request({
-    url: http+'/api/codeGen/template/list',
+    url: http+'/codeGen/template/list',
     method: 'post',
     data:data
   })
@@ -22,7 +22,7 @@ export function getLoadTemplate(data) {
 
 export function getLoadDbType(data) {
   return request({
-    url: http+'/api/codeGen/datasource/dbtype',
+    url: http+'/codeGen/datasource/dbtype',
     method: 'post',
     data:data
   })
@@ -30,7 +30,7 @@ export function getLoadDbType(data) {
 
 export function postDataSourceChange(id,data) {
   return request({
-    url: http+'/api/codeGen/datasource/table/'+id+'',
+    url: http+'/codeGen/datasource/table/'+id+'',
     method: 'post',
     data:data
   })
@@ -38,7 +38,7 @@ export function postDataSourceChange(id,data) {
 
 export function postDataSourceDelete(data) {
   return request({
-    url: http+'/api/codeGen/datasource/del',
+    url: http+'/codeGen/datasource/del',
     method: 'post',
     data:data
   })
@@ -46,7 +46,7 @@ export function postDataSourceDelete(data) {
 
 export function postDatasourceTest(data) {
   return request({
-    url: http+'/api/codeGen/datasource/test',
+    url: http+'/codeGen/datasource/test',
     method: 'post',
     data:data
   })
@@ -54,7 +54,7 @@ export function postDatasourceTest(data) {
 
 export function datasourceUpdate(data) {
   return request({
-    url: http+'/api/codeGen/datasource/update',
+    url: http+'/codeGen/datasource/update',
     method: 'post',
     data:data
   })
@@ -62,7 +62,7 @@ export function datasourceUpdate(data) {
 
 export function datasourceAdd(data) {
   return request({
-    url: http+'/api/codeGen/datasource/add',
+    url: http+'/codeGen/datasource/add',
     method: 'post',
     data:data
   })
@@ -72,7 +72,7 @@ export function datasourceAdd(data) {
 
 export function postGenerateCode(data) {
   return request({
-    url: http+'/api/codeGen/generate/code',
+    url: http+'/codeGen/generate/code',
     method: 'post',
     data:data
   })
@@ -82,7 +82,7 @@ export function postGenerateCode(data) {
 
 export function getTemplateList(data) {
   return request({
-    url: http+'/api/codeGen/template/list',
+    url: http+'/codeGen/template/list',
     method: 'post',
     data:data
   })
@@ -90,7 +90,7 @@ export function getTemplateList(data) {
 
 export function deleteTemplate(data) {
   return request({
-    url: http+'/api/codeGen/template/del',
+    url: http+'/codeGen/template/del',
     method: 'post',
     data:data
   })
@@ -100,7 +100,7 @@ export function deleteTemplate(data) {
 
 export function getTemplateById(id,data) {
   return request({
-    url: http+'/api/codeGen/template/get/'+id,
+    url: http+'/codeGen/template/get/'+id,
     method: 'post',
     data:data
   })
@@ -108,11 +108,25 @@ export function getTemplateById(id,data) {
 
 export function saveTemplate(opt,data) {
   return request({
-    url: http+'/api/codeGen/template/'+opt,
+    url: http+'/codeGen/template/'+opt,
     method: 'post',
     data:data
   })
 } 
 
+export function getJavaFile(time,callback) {
+	axios.get('/codeGen/velocity/java.json?q='+time)
+	    .then(function(response) {
+	      callback.call(this, response.data)
+	})
+}
+
+
+export function getCsharpFile(time,callback) {
+	axios.get('/codeGen/velocity/csharp.json?q='+time)
+	    .then(function(response) {
+	      callback.call(this, response.data)
+	})
+}
 
 
